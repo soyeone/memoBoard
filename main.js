@@ -101,7 +101,8 @@ function createWindow() {
       nodeIntegration: false,
       backgroundThrottling: false,
     },
-    title: '데스크톱 메모보드',
+    title: '메모보드',
+    icon: path.join(__dirname, 'assets', 'app-icon.png'),
   };
 
   if (savedState && isBoundsWithinDisplay(savedState)) {

@@ -5,7 +5,7 @@ class TodoWidget extends WidgetBase {
     config.title = config.title || '할 일 목록 (Todo)';
     config.icon = (window.WidgetIcons && window.WidgetIcons.todo) || '✅';
     config.minWidth = 260;
-    config.minHeight = 280;
+    config.minHeight = 240;
     super(board, config);
 
     // Todo 목록 동기화 로직:
@@ -77,7 +77,52 @@ class TodoWidget extends WidgetBase {
   getFilteredTodos() {
     if (this.filter === 'active') return this.todos.filter(t => !t.done);
     if (this.filter === 'completed') return this.todos.filter(t => t.done);
-    return this.todos;
+    // 전체 보기: 완료되지 않은 항목(진행 중)을 위로, 완료된 항목은 아래로 정렬
+    const active = this.todos.filter(t => !t.done);
+    const completed = this.todos.filter(t => t.done);
+    return [...active, ...completed];
+  }
+
+  // 날짜 형식 예쁘게 포맷 (오늘, 내일, D-day 등)
+  formatDueDate(dateStr) {
+    if (!dateStr) return '';
+    try {
+      const parts = dateStr.split('-');
+      if (parts.length !== 3) return dateStr;
+      const m = parseInt(parts[1], 10);
+      const d = parseInt(parts[2], 10);
+
+      const targetDate = new Date(parseInt(parts[0], 10), m - 1, d);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      targetDate.setHours(0, 0, 0, 0);
+
+      const diffTime = targetDate.getTime() - today.getTime();
+      const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+
+      if (diffDays === 0) return `오늘 (${m}/${d})`;
+      if (diffDays === 1) return `내일 (${m}/${d})`;
+      if (diffDays === -1) return `어제 (${m}/${d})`;
+      if (diffDays < -1) return `${Math.abs(diffDays)}일 지남 (${m}/${d})`;
+      if (diffDays > 1 && diffDays <= 7) return `D-${diffDays} (${m}/${d})`;
+      return `${m}월 ${d}일`;
+    } catch (e) {
+      return dateStr;
+    }
+  }
+
+  isOverdue(dateStr) {
+    if (!dateStr) return false;
+    try {
+      const parts = dateStr.split('-');
+      if (parts.length !== 3) return false;
+      const targetDate = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      return targetDate < today;
+    } catch (e) {
+      return false;
+    }
   }
 
   render() {
@@ -85,22 +130,10 @@ class TodoWidget extends WidgetBase {
 
     const total = this.todos.length;
     const completed = this.todos.filter(t => t.done).length;
-    const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
     const filtered = this.getFilteredTodos();
 
     this.bodyElement.innerHTML = `
       <div class="todo-container">
-        <!-- 상단 진행률 영역 -->
-        <div class="todo-stats">
-          <div class="todo-stats-info">
-            <span class="todo-count">${completed}/${total} 완료</span>
-            <span class="todo-percent">${percent}%</span>
-          </div>
-          <div class="todo-progress-bar">
-            <div class="todo-progress-fill" style="width: ${percent}%;"></div>
-          </div>
-        </div>
-
         <!-- 새 할 일 입력 폼 -->
         <form class="todo-input-bar">
           <input type="text" class="todo-input" placeholder="새로운 할 일을 입력하세요..." autocomplete="off" />
@@ -126,12 +159,32 @@ class TodoWidget extends WidgetBase {
                 <input type="checkbox" class="todo-checkbox" ${todo.done ? 'checked' : ''} />
                 <span class="todo-checkmark"></span>
               </label>
-              <span class="todo-text" title="더블 클릭하여 수정">${this.escapeHtml(todo.text)}</span>
-              <button type="button" class="todo-delete-btn" title="삭제">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-                </svg>
-              </button>
+              <div class="todo-content-col">
+                <span class="todo-text" title="더블 클릭하여 수정">${this.escapeHtml(todo.text)}</span>
+                ${todo.dueDate ? `
+                  <div class="todo-due-badge ${this.isOverdue(todo.dueDate) && !todo.done ? 'is-overdue' : ''}" title="마감일 수정/삭제">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                      <line x1="16" y1="2" x2="16" y2="6"/>
+                      <line x1="8" y1="2" x2="8" y2="6"/>
+                      <line x1="3" y1="10" x2="21" y2="10"/>
+                    </svg>
+                    <span>${this.formatDueDate(todo.dueDate)}</span>
+                  </div>
+                ` : ''}
+              </div>
+              <div class="todo-actions">
+                <button type="button" class="todo-due-btn" title="${todo.dueDate ? '마감일 수정/삭제' : '마감일 지정'}">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                  </svg>
+                </button>
+                <button type="button" class="todo-delete-btn" title="삭제">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                  </svg>
+                </button>
+              </div>
             </li>
           `).join('')}
           ${filtered.length === 0 ? '<li class="todo-empty">할 일이 없습니다 ✨</li>' : ''}
@@ -200,8 +253,19 @@ class TodoWidget extends WidgetBase {
       }
     });
 
-    // 4. 삭제 버튼 클릭
+    // 4. 마감일 설정 (+ 버튼 및 날짜 배지 클릭)
     list.addEventListener('click', (e) => {
+      const dueBtn = e.target.closest('.todo-due-btn');
+      const badgeBtn = e.target.closest('.todo-due-badge');
+      if (dueBtn || badgeBtn) {
+        e.stopPropagation();
+        const item = (dueBtn || badgeBtn).closest('.todo-item');
+        if (!item) return;
+        this.openDueModal(item.dataset.id);
+        return;
+      }
+
+      // 5. 삭제 버튼 클릭
       const deleteBtn = e.target.closest('.todo-delete-btn');
       if (deleteBtn) {
         e.stopPropagation();
@@ -213,7 +277,7 @@ class TodoWidget extends WidgetBase {
       }
     });
 
-    // 5. 더블클릭 텍스트 수정
+    // 6. 더블클릭 텍스트 수정
     list.addEventListener('dblclick', (e) => {
       const textEl = e.target.closest('.todo-text');
       if (!textEl) return;
@@ -245,6 +309,117 @@ class TodoWidget extends WidgetBase {
         }
       });
     });
+  }
+
+  // 마감일(Due date) 지정/수정/삭제 모달 설정창 열기
+  openDueModal(todoId) {
+    const target = this.todos.find(t => t.id === todoId);
+    if (!target) return;
+
+    this.closeDueModal();
+
+    const container = this.bodyElement.querySelector('.todo-container');
+    if (!container) return;
+
+    const now = new Date();
+    const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    const currentVal = target.dueDate || todayStr;
+
+    const modalEl = document.createElement('div');
+    modalEl.className = 'todo-due-modal-backdrop';
+    modalEl.innerHTML = `
+      <div class="todo-due-modal">
+        <div class="todo-due-modal-header">
+          <span class="todo-due-modal-title">마감일(Due Date) 설정</span>
+          <button type="button" class="todo-due-modal-close" title="닫기">&times;</button>
+        </div>
+        <div class="todo-due-modal-body">
+          <div class="todo-due-task-preview">${this.escapeHtml(target.text)}</div>
+          <input type="date" class="todo-due-date-input" value="${currentVal}" />
+          <div class="todo-due-quick-chips">
+            <button type="button" class="due-chip" data-days="0">오늘</button>
+            <button type="button" class="due-chip" data-days="1">내일</button>
+            <button type="button" class="due-chip" data-days="3">3일 후</button>
+            <button type="button" class="due-chip" data-days="7">1주일 후</button>
+          </div>
+        </div>
+        <div class="todo-due-modal-footer">
+          ${target.dueDate ? '<button type="button" class="btn-due-delete">날짜 삭제</button>' : ''}
+          <button type="button" class="btn-due-save">저장</button>
+        </div>
+      </div>
+    `;
+
+    container.appendChild(modalEl);
+
+    const input = modalEl.querySelector('.todo-due-date-input');
+    const closeBtn = modalEl.querySelector('.todo-due-modal-close');
+    const saveBtn = modalEl.querySelector('.btn-due-save');
+    const deleteBtn = modalEl.querySelector('.btn-due-delete');
+    const chips = modalEl.querySelectorAll('.due-chip');
+
+    // 퀵 칩 선택 시 날짜 인풋 즉시 변경
+    chips.forEach(chip => {
+      chip.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const days = parseInt(chip.dataset.days, 10);
+        const d = new Date();
+        d.setDate(d.getDate() + days);
+        const ymd = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        input.value = ymd;
+      });
+    });
+
+    // 저장
+    saveBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (input.value) {
+        target.dueDate = input.value;
+      } else {
+        delete target.dueDate;
+      }
+      this.closeDueModal();
+      this.updateSharedTodos(this.todos);
+      window.soundManager.playPop();
+    });
+
+    // 기존 마감일 삭제
+    if (deleteBtn) {
+      deleteBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        delete target.dueDate;
+        this.closeDueModal();
+        this.updateSharedTodos(this.todos);
+      });
+    }
+
+    // 닫기
+    closeBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      this.closeDueModal();
+    });
+
+    modalEl.addEventListener('click', (e) => {
+      if (e.target === modalEl) {
+        this.closeDueModal();
+      }
+    });
+
+    const escHandler = (e) => {
+      if (e.key === 'Escape') {
+        this.closeDueModal();
+        window.removeEventListener('keydown', escHandler);
+      }
+    };
+    window.addEventListener('keydown', escHandler);
+  }
+
+  closeDueModal() {
+    if (!this.bodyElement) return;
+    const existing = this.bodyElement.querySelector('.todo-due-modal-backdrop');
+    if (existing) {
+      existing.remove();
+    }
   }
 }
 

@@ -8,10 +8,10 @@ class WidgetBase {
     this.icon = (window.WidgetIcons && window.WidgetIcons[this.type]) || config.icon || '📌';
     this.x = typeof config.x === 'number' ? config.x : 60;
     this.y = typeof config.y === 'number' ? config.y : 60;
-    this.width = typeof config.width === 'number' ? config.width : 320;
-    this.height = typeof config.height === 'number' ? config.height : 360;
     this.minWidth = config.minWidth || 220;
-    this.minHeight = config.minHeight || 180;
+    this.minHeight = config.minHeight || 120;
+    this.width = Math.max(this.minWidth, typeof config.width === 'number' ? config.width : 320);
+    this.height = Math.max(this.minHeight, typeof config.height === 'number' ? config.height : 360);
     this.zIndex = typeof config.zIndex === 'number' ? config.zIndex : 10;
     this.isPinned = !!config.isPinned;
     this.isFolded = !!config.isFolded;

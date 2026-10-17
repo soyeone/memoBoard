@@ -7,10 +7,12 @@
   background: transparent !important;
   border: 2px solid transparent !important;
   box-shadow: none !important;
+  border-radius: 14px !important;
   transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease !important;
   cursor: grab;
   padding: 0;
   overflow: visible;
+  container-type: size;
 }
 
 .widget-card.widget-clock:hover,
@@ -32,8 +34,8 @@
 
 .widget-card.widget-clock .widget-header {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: 4px;
+  right: 4px;
   padding: 0;
   border: none;
   background: transparent;
@@ -42,8 +44,9 @@
 }
 
 .widget-card.widget-clock .btn-close {
-  width: 24px;
-  height: 24px;
+  width: 18px;
+  height: 18px;
+  font-size: 11px;
   border-radius: 50%;
   background: rgba(238, 232, 222, 0.85);
   color: #6e6153;
@@ -78,17 +81,18 @@
   background: transparent;
 }
 
-/* 시계 본체: 시간 & 날짜 타이포그래피 */
+/* 시계 본체: 시간 & 날짜 타이포그래피 (크기 조절 시 글자 크기 동적 반응) */
 .clock-clean-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 8px 12px;
+  padding: 4px 8px;
   width: 100%;
   height: 100%;
   user-select: none;
   pointer-events: auto;
+  box-sizing: border-box;
 }
 
 .clock-time-display {
@@ -100,27 +104,23 @@
 }
 
 .clock-time-display .time-hm {
-  font-size: 42px;
+  font-size: var(--clock-time-size, clamp(18px, min(24cqw, 42cqh), 140px));
   font-weight: 900;
-  letter-spacing: -1.5px;
+  letter-spacing: -0.04em;
   color: #3b3127;
   text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
-}
-
-.clock-time-display .time-sec {
-  font-size: 19px;
-  font-weight: 700;
-  color: #8c7e6f;
-  margin-left: 2px;
+  line-height: 1;
 }
 
 .clock-date-display {
-  margin-top: 6px;
-  font-size: 13.5px;
+  margin-top: clamp(1px, 1.5cqh, 6px);
+  font-size: var(--clock-date-size, clamp(9px, min(7.5cqw, 14cqh), 42px));
   font-weight: 700;
   color: #726253;
-  letter-spacing: -0.3px;
+  letter-spacing: -0.02em;
   text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+  white-space: nowrap;
+  line-height: 1.2;
 }
 
 /* 리사이즈 핸들: 평소 투명, 호버 시 노출 */

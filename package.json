@@ -1,7 +1,7 @@
 {
   "name": "desktop-memo-board",
   "version": "1.0.0",
-  "description": "Customizable Desktop Memo Board with Drag & Drop Widgets",
+  "description": "메모보드 - 감성 데스크톱 위젯 메모장",
   "main": "main.js",
   "scripts": {
     "start": "electron .",

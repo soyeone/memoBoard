@@ -4,15 +4,17 @@ class PhotoWidget extends WidgetBase {
     config.type = 'photo';
     config.title = config.title || '사진 액자 (Photo)';
     config.icon = (window.WidgetIcons && window.WidgetIcons.photo) || '🖼️';
-    config.minWidth = 240;
-    config.minHeight = 260;
+    config.minWidth = 160;
+    config.minHeight = 160;
     super(board, config);
 
     this.imageUrl = this.data.imageUrl || '';
     this.fitMode = this.data.fitMode || 'cover'; // 'cover' or 'contain'
     this.caption = this.data.caption || '';
+    this.showCaption = Boolean(this.data.showCaption ?? (this.caption && this.caption.trim().length > 0));
 
     this.render();
+    this.bindPhotoDrag();
   }
 
   getData() {
@@ -20,6 +22,7 @@ class PhotoWidget extends WidgetBase {
       imageUrl: this.imageUrl,
       fitMode: this.fitMode,
       caption: this.caption,
+      showCaption: this.showCaption,
     };
   }
 
@@ -45,10 +48,15 @@ class PhotoWidget extends WidgetBase {
       `;
     } else {
       this.bodyElement.innerHTML = `
-        <div class="photo-container fit-${this.fitMode}">
+        <div class="photo-container fit-${this.fitMode} ${this.showCaption ? 'has-caption' : 'no-caption'}">
           <div class="photo-image-wrapper">
             <img class="photo-img" src="${this.imageUrl}" alt="메모보드 사진" />
             <div class="photo-overlay-tools">
+              <button class="photo-tool-btn btn-caption ${this.showCaption ? 'is-active' : ''}" title="${this.showCaption ? '캡션 숨기기/삭제' : '캡션/메모 추가 (+)'}">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+              </button>
               <button class="photo-tool-btn btn-fit" title="화면 맞춤 방식 전환 (${this.fitMode})">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
               </button>
@@ -61,9 +69,11 @@ class PhotoWidget extends WidgetBase {
               <input type="file" class="photo-file-input-replace" accept="image/*" style="display:none;" />
             </div>
           </div>
-          <div class="photo-caption-bar">
-            <input type="text" class="photo-caption-input" placeholder="메모나 캡션을 적어보세요..." value="${this.escapeHtml(this.caption)}" />
-          </div>
+          ${this.showCaption ? `
+            <div class="photo-caption-bar">
+              <input type="text" class="photo-caption-input" placeholder="메모나 캡션을 적어보세요..." value="${this.escapeHtml(this.caption)}" />
+            </div>
+          ` : ''}
         </div>
       `;
     }
@@ -113,11 +123,30 @@ class PhotoWidget extends WidgetBase {
     }
 
     // 사진 뷰 모드일 때
+    const btnCaption = this.bodyElement.querySelector('.btn-caption');
     const btnFit = this.bodyElement.querySelector('.btn-fit');
     const btnReplace = this.bodyElement.querySelector('.btn-replace');
     const btnRemove = this.bodyElement.querySelector('.btn-remove');
     const replaceInput = this.bodyElement.querySelector('.photo-file-input-replace');
     const captionInput = this.bodyElement.querySelector('.photo-caption-input');
+
+    if (btnCaption) {
+      btnCaption.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.showCaption = !this.showCaption;
+        if (!this.showCaption) {
+          this.caption = '';
+        }
+        this.board.saveState();
+        this.render();
+        if (this.showCaption) {
+          const capInput = this.bodyElement.querySelector('.photo-caption-input');
+          if (capInput) {
+            capInput.focus();
+          }
+        }
+      });
+    }
 
     if (btnFit) {
       btnFit.addEventListener('click', (e) => {
@@ -146,6 +175,7 @@ class PhotoWidget extends WidgetBase {
         e.stopPropagation();
         this.imageUrl = '';
         this.caption = '';
+        this.showCaption = false;
         this.board.saveState();
         this.render();
       });
@@ -155,6 +185,12 @@ class PhotoWidget extends WidgetBase {
       captionInput.addEventListener('input', (e) => {
         this.caption = e.target.value;
         this.board.saveState();
+      });
+      captionInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          captionInput.blur();
+        }
       });
     }
 
@@ -183,6 +219,23 @@ class PhotoWidget extends WidgetBase {
       this.render();
     };
     reader.readAsDataURL(file);
+  }
+
+  bindPhotoDrag() {
+    if (this.bodyElement) {
+      this.bodyElement.addEventListener('mousedown', (e) => {
+        if (e.target.closest('.widget-btn') || 
+            e.target.closest('.photo-tool-btn') || 
+            e.target.closest('.photo-caption-input') || 
+            e.target.closest('.photo-dropzone') ||
+            e.target.closest('.resize-handle')) {
+          return;
+        }
+        if (!this.isPinned) {
+          this.startDrag(e);
+        }
+      });
+    }
   }
 }
 

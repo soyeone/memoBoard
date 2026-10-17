@@ -202,6 +202,58 @@ class MemoBoard {
     window.soundManager.playPop();
   }
 
+  // 특정 위젯 위치로 부드럽게 스크롤 이동 및 포커스 하이라이트
+  focusWidget(widget) {
+    if (!widget || !widget.element) return;
+    this.bringToFront(widget);
+    const canvasRect = this.canvas.getBoundingClientRect();
+    const targetLeft = Math.max(0, widget.x - (canvasRect.width - widget.width) / 2);
+    const targetTop = Math.max(0, widget.y - (canvasRect.height - widget.height) / 2);
+
+    this.canvas.scrollTo({
+      left: targetLeft,
+      top: targetTop,
+      behavior: 'smooth'
+    });
+
+    widget.element.classList.remove('is-spotlight');
+    void widget.element.offsetWidth; // trigger reflow
+    widget.element.classList.add('is-spotlight');
+    setTimeout(() => {
+      widget.element.classList.remove('is-spotlight');
+    }, 2200);
+
+    if (window.soundManager) window.soundManager.playPop();
+  }
+
+  // 흩어져 있거나 화면 밖에 있는 위젯들을 현재 보이는 화면 안으로 정돈
+  gatherWidgetsToView() {
+    const startX = this.canvas.scrollLeft + 40;
+    const startY = this.canvas.scrollTop + 40;
+    let curX = startX;
+    let curY = startY;
+    const gap = 20;
+    let rowH = 0;
+    const maxW = (this.canvas.clientWidth || 1000) - 80;
+
+    this.widgets.forEach(w => {
+      if (curX + w.width > startX + maxW && curX > startX) {
+        curX = startX;
+        curY += rowH + gap;
+        rowH = 0;
+      }
+      w.x = curX;
+      w.y = curY;
+      w.element.style.left = `${curX}px`;
+      w.element.style.top = `${curY}px`;
+      curX += w.width + gap;
+      if (w.height > rowH) rowH = w.height;
+    });
+
+    this.saveState();
+    if (window.soundManager) window.soundManager.playPop();
+  }
+
   saveState() {
     window.storageManager.saveBoardState(this.widgets);
   }
@@ -257,7 +309,8 @@ class MemoBoard {
       theme: 'default',
       data: {
         imageUrl: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=800&q=80',
-        caption: '숲속 오솔길 산책 ✨',
+        caption: '',
+        showCaption: false,
         fitMode: 'cover'
       }
     });
@@ -279,8 +332,8 @@ class MemoBoard {
     this.addWidget('timer', {
       x: 396,
       y: 438,
-      width: 310,
-      height: 240,
+      width: 290,
+      height: 350,
       title: '집중 타이머',
       theme: 'mint',
     });
@@ -289,8 +342,8 @@ class MemoBoard {
     this.addWidget('clock', {
       x: 734,
       y: 438,
-      width: 220,
-      height: 120,
+      width: 175,
+      height: 74,
       title: '시계',
       theme: 'default',
     });

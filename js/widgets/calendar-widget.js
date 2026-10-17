@@ -75,7 +75,6 @@ class CalendarWidget extends WidgetBase {
     return {
       year: this.currentYear,
       month: this.currentMonth,
-      selectedDate: this.selectedDate,
       events: this.events,
     };
   }
@@ -114,11 +113,10 @@ class CalendarWidget extends WidgetBase {
     for (let i = 1; i <= lastDay; i++) {
       const dateStr = `${this.currentYear}-${String(this.currentMonth + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
       const isToday = dateStr === todayStr;
-      const isSelected = dateStr === this.selectedDate;
       const dayEvents = Array.isArray(this.events[dateStr]) ? this.events[dateStr] : [];
 
       daysHtml += `
-        <div class="calendar-day current-month ${isToday ? 'is-today' : ''} ${isSelected ? 'is-selected' : ''}" data-date="${dateStr}" title="클릭하여 새 일정 추가">
+        <div class="calendar-day current-month ${isToday ? 'is-today' : ''}" data-date="${dateStr}" title="클릭하여 새 일정 추가">
           <div class="day-header">
             <span class="day-num">${i}</span>
             ${dayEvents.length > 0 ? `<span class="day-event-count">${dayEvents.length}</span>` : ''}
@@ -278,6 +276,7 @@ class CalendarWidget extends WidgetBase {
       this.activeModal.parentNode.removeChild(this.activeModal);
     }
     this.activeModal = null;
+    this.selectedDate = null;
   }
 
   // 새 일정 등록 팝업 모달

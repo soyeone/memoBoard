@@ -4,8 +4,10 @@ class TimerWidget extends WidgetBase {
     config.type = 'timer';
     config.title = config.title || '집중 타이머 (Focus)';
     config.icon = (window.WidgetIcons && window.WidgetIcons.timer) || '⏱️';
-    config.minWidth = 280;
-    config.minHeight = 320;
+    config.minWidth = 260;
+    config.minHeight = 280;
+    config.width = typeof config.width === 'number' ? Math.max(config.minWidth, config.width) : 290;
+    config.height = typeof config.height === 'number' ? Math.max(config.minHeight, config.height) : 350;
     super(board, config);
 
     this.mode = this.data.mode || 'pomodoro'; // pomodoro(25m), shortBreak(5m), longBreak(15m), stopwatch
@@ -64,7 +66,7 @@ class TimerWidget extends WidgetBase {
         </div>
 
         <div class="timer-dial-area">
-          <svg class="timer-svg" width="180" height="180" viewBox="0 0 180 180">
+          <svg class="timer-svg" viewBox="0 0 180 180">
             <circle class="timer-circle-bg" cx="90" cy="90" r="${radius}" stroke-width="8"></circle>
             ${!isStopwatch ? `
               <circle class="timer-circle-progress" cx="90" cy="90" r="${radius}" stroke-width="8"
@@ -95,13 +97,59 @@ class TimerWidget extends WidgetBase {
           </button>
         </div>
 
-        <div class="timer-footer-info">
-          <span>완료한 세션: <strong>${this.completedSessions}회</strong> 🍅</span>
-        </div>
+        ${this.mode === 'pomodoro' ? `
+          <div class="timer-footer-info">
+            <span>완료한 세션: <strong>${this.completedSessions}회</strong> 🍅</span>
+          </div>
+        ` : ''}
       </div>
     `;
 
+    this.updateResponsiveLayout(this.width, this.height);
     this.bindTimerEvents();
+  }
+
+  // 위젯 크기 조절 시 실시간 내부 타이머 크기 동적 스케일링
+  onResize(width, height) {
+    this.updateResponsiveLayout(width, height);
+  }
+
+  updateResponsiveLayout(w, h) {
+    if (!this.element) return;
+    const width = w || this.width || 290;
+    const height = h || this.height || 350;
+
+    // 헤더(약 44px)를 제외한 바디 가용 공간
+    const bodyHeight = Math.max(160, height - 44);
+    const bodyWidth = Math.max(220, width);
+
+    // 하단 세션 정보(뽀모도로 모드 시 약 22px) 및 상단 모드 탭, 컨트롤 버튼의 세로 점유 공간
+    const isPomodoro = this.mode === 'pomodoro';
+    const nonDialHeight = isPomodoro ? 132 : 108;
+    const availDialH = bodyHeight - nonDialHeight;
+    const availDialW = bodyWidth - 36;
+
+    // 다이얼 크기 동적 계산 (최소 96px ~ 최대 280px)
+    const dialSize = Math.max(96, Math.min(availDialW, availDialH, 280));
+
+    // 다이얼 크기 및 너비에 비례하는 폰트 및 요소 크기
+    const timeFontSize = Math.max(20, Math.round(dialSize * 0.22));
+    const modeLabelSize = Math.max(9.5, Math.round(dialSize * 0.075));
+    const btnPaddingY = dialSize > 140 ? 8 : (dialSize > 110 ? 6 : 5);
+    const btnPaddingX = dialSize > 140 ? 22 : (dialSize > 110 ? 18 : 14);
+    const btnFontSize = dialSize > 140 ? 13 : (dialSize > 110 ? 12 : 11);
+    const resetSize = Math.max(30, Math.min(40, Math.round(dialSize * 0.24)));
+    const modeBtnFont = Math.max(10, Math.min(12, Math.round(9.5 + (bodyWidth - 250) * 0.015)));
+
+    this.element.style.setProperty('--timer-dial-size', `${dialSize}px`);
+    this.element.style.setProperty('--timer-time-size', `${timeFontSize}px`);
+    this.element.style.setProperty('--timer-mode-label-size', `${modeLabelSize}px`);
+    this.element.style.setProperty('--timer-btn-padding', `${btnPaddingY}px ${btnPaddingX}px`);
+    this.element.style.setProperty('--timer-btn-font', `${btnFontSize}px`);
+    this.element.style.setProperty('--timer-reset-size', `${resetSize}px`);
+    this.element.style.setProperty('--timer-mode-btn-font', `${modeBtnFont}px`);
+    this.element.style.setProperty('--timer-gap', dialSize > 140 ? '10px' : '6px');
+    this.element.style.setProperty('--timer-padding', dialSize > 140 ? '12px 14px' : '8px 12px');
   }
 
   getModeLabel() {

@@ -110,11 +110,6 @@
   background: #f2f7f1;
 }
 
-.calendar-day.is-selected {
-  outline: 2px solid var(--accent-gold);
-  outline-offset: -1px;
-}
-
 .day-header {
   display: flex;
   align-items: center;

@@ -7,45 +7,9 @@
   height: 100%;
   padding: 14px 16px;
   gap: 12px;
+  position: relative;
 }
 
-.todo-stats {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  background: #f7f4ec;
-  padding: 10px 14px;
-  border-radius: 16px;
-  border: 1px solid #e8e2d4;
-}
-
-.todo-stats-info {
-  display: flex;
-  justify-content: space-between;
-  font-size: 12px;
-  font-weight: 800;
-  color: var(--text-muted);
-}
-
-.todo-percent {
-  color: var(--leaf-green);
-  font-weight: 900;
-}
-
-.todo-progress-bar {
-  width: 100%;
-  height: 8px;
-  background: #e5ded0;
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.todo-progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #799a77, #588157);
-  border-radius: 4px;
-  transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-}
 
 .todo-input-bar {
   display: flex;
@@ -149,7 +113,7 @@
 
 .todo-item {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 10px;
   padding: 8px 12px;
   background: #fcfbf8;
@@ -169,6 +133,7 @@
   display: flex;
   align-items: center;
   cursor: pointer;
+  margin-top: 2px;
 }
 
 .todo-checkbox {
@@ -201,8 +166,15 @@
   font-weight: 900;
 }
 
-.todo-text {
+.todo-content-col {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.todo-text {
   font-size: 13px;
   font-weight: 600;
   color: var(--text-main);
@@ -218,6 +190,70 @@
   color: var(--text-dim);
 }
 
+/* 마감일(Due Date) 뱃지 (텍스트 아래 표시) */
+.todo-due-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4.5px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #786957;
+  background: #f1ebd8;
+  padding: 2px 7.5px;
+  border-radius: 8px;
+  width: fit-content;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.todo-due-badge:hover {
+  background: #e5ddc5;
+  color: var(--text-main);
+}
+
+.todo-due-badge.is-overdue {
+  color: #d90429;
+  background: #ffe3e3;
+}
+
+.todo-item.is-done .todo-due-badge {
+  opacity: 0.55;
+}
+
+/* 우측 액션 버튼들 (호버 시 부드럽게 노출) */
+.todo-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: auto;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.todo-due-btn {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.15s ease;
+}
+
+.todo-item:hover .todo-due-btn {
+  opacity: 1;
+}
+
+.todo-due-btn:hover {
+  color: var(--leaf-green);
+  background: #edf5ed;
+  transform: scale(1.1);
+}
+
 .todo-delete-btn {
   background: none;
   border: none;
@@ -225,6 +261,9 @@
   cursor: pointer;
   padding: 4px;
   border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   opacity: 0;
   transition: all 0.15s ease;
 }
@@ -236,6 +275,179 @@
 .todo-delete-btn:hover {
   color: #e63946;
   background: #fdf0f0;
+}
+
+/* 마감일(Due Date) 설정 모달창 */
+.todo-due-modal-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(35, 27, 18, 0.42);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  border-radius: 20px;
+  padding: 16px;
+  animation: todoFadeIn 0.15s ease;
+}
+
+.todo-due-modal {
+  background: #fdfcf9;
+  border: 1.5px solid #ded6c8;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.16);
+  width: 100%;
+  max-width: 250px;
+  display: flex;
+  flex-direction: column;
+  padding: 14px;
+  gap: 10px;
+  animation: todoScaleUp 0.15s ease;
+}
+
+@keyframes todoFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes todoScaleUp {
+  from { transform: scale(0.92); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.todo-due-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.todo-due-modal-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.todo-due-modal-close {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: var(--text-muted);
+  cursor: pointer;
+  line-height: 1;
+  padding: 2px 4px;
+  border-radius: 6px;
+}
+
+.todo-due-modal-close:hover {
+  background: #f0eae1;
+  color: var(--text-main);
+}
+
+.todo-due-modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.todo-due-task-preview {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 5px 8px;
+  background: #f5f0e6;
+  border-radius: 8px;
+}
+
+.todo-due-date-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 7px 10px;
+  border-radius: 10px;
+  border: 1.5px solid #ded6c8;
+  background: #ffffff;
+  color: var(--text-main);
+  font-family: var(--font-main);
+  font-size: 12.5px;
+  font-weight: 600;
+  outline: none;
+}
+
+.todo-due-date-input:focus {
+  border-color: var(--leaf-green);
+  box-shadow: 0 0 0 2px rgba(88, 129, 87, 0.2);
+}
+
+.todo-due-quick-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.due-chip {
+  background: #f0eae1;
+  border: none;
+  color: #6e6153;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+
+.due-chip:hover {
+  background: #e2d9cb;
+  color: var(--text-main);
+}
+
+.todo-due-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.btn-due-delete {
+  background: #fdf0f0;
+  border: 1px solid #f9cccc;
+  color: #e63946;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-right: auto;
+  transition: all 0.12s ease;
+}
+
+.btn-due-delete:hover {
+  background: #e63946;
+  color: #ffffff;
+}
+
+.btn-due-save {
+  background: var(--leaf-green);
+  border: none;
+  color: #ffffff;
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 6px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(88, 129, 87, 0.25);
+  transition: all 0.12s ease;
+}
+
+.btn-due-save:hover {
+  background: var(--leaf-green-light);
+  transform: translateY(-1px);
 }
 
 .todo-empty {
