@@ -5,12 +5,12 @@ class DockManager {
     this.board = memoBoard;
 
     this.items = [
-      { type: 'calendar', title: '캘린더', icon: '📅', desc: '일정 및 월별 달력' },
-      { type: 'todo', title: 'Todo List', icon: '✅', desc: '할 일 체크리스트 & 진행률' },
-      { type: 'timer', title: '집중 타이머', icon: '⏱️', desc: '뽀모도로 & 스톱워치' },
-      { type: 'photo', title: '사진 액자', icon: '🖼️', desc: '이미지 업로드 & 클립보드 붙여넣기' },
-      { type: 'note', title: '포스트잇', icon: '📝', desc: '다채로운 빠른 메모장' },
-      { type: 'clock', title: '시계', icon: '🕒', desc: '디지털 & 아날로그 시계' },
+      { type: 'calendar', title: '캘린더', desc: '일정 및 월별 달력' },
+      { type: 'todo', title: 'Todo List', desc: '할 일 체크리스트 & 진행률' },
+      { type: 'timer', title: '집중 타이머', desc: '뽀모도로 & 스톱워치' },
+      { type: 'photo', title: '사진 액자', desc: '이미지 업로드 & 클립보드 붙여넣기' },
+      { type: 'note', title: '포스트잇', desc: '다채로운 빠른 메모장' },
+      { type: 'clock', title: '시계', desc: '디지털 & 아날로그 시계' },
     ];
 
     this.render();
@@ -24,17 +24,19 @@ class DockManager {
           <div class="dock-pill"></div>
         </div>
         <div class="dock-items">
-          ${this.items.map(item => `
-            <div class="dock-item" 
-                 draggable="false"
-                 data-type="${item.type}" 
-                 data-title="${item.title}" 
-                 data-icon="${item.icon}"
-                 title="${item.title} (끌어서 보드에 배치하거나 클릭하세요)">
-              <div class="dock-item-icon">${item.icon}</div>
-              <span class="dock-item-tooltip">${item.title}</span>
-            </div>
-          `).join('')}
+          ${this.items.map(item => {
+            const svgIcon = (window.WidgetIcons && window.WidgetIcons[item.type]) || '';
+            return `
+              <div class="dock-item" 
+                   draggable="false"
+                   data-type="${item.type}" 
+                   data-title="${item.title}" 
+                   title="${item.title} (끌어서 보드에 배치하거나 클릭하세요)">
+                <div class="dock-item-icon">${svgIcon}</div>
+                <span class="dock-item-tooltip">${item.title}</span>
+              </div>
+            `;
+          }).join('')}
 
           <div class="dock-divider"></div>
 
@@ -68,7 +70,7 @@ class DockManager {
     dockItems.forEach(item => {
       const type = item.dataset.type;
       const title = item.dataset.title;
-      const icon = item.dataset.icon;
+      const icon = (window.WidgetIcons && window.WidgetIcons[type]) || '';
 
       let isDragging = false;
       let hasMovedSignificantly = false;

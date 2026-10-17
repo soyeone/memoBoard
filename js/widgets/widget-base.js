@@ -5,7 +5,7 @@ class WidgetBase {
     this.id = config.id || 'w_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
     this.type = config.type || 'generic';
     this.title = config.title || '위젯';
-    this.icon = config.icon || '📌';
+    this.icon = (window.WidgetIcons && window.WidgetIcons[this.type]) || config.icon || '📌';
     this.x = typeof config.x === 'number' ? config.x : 60;
     this.y = typeof config.y === 'number' ? config.y : 60;
     this.width = typeof config.width === 'number' ? config.width : 320;

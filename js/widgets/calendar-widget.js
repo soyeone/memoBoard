@@ -3,7 +3,7 @@ class CalendarWidget extends WidgetBase {
   constructor(board, config = {}) {
     config.type = 'calendar';
     config.title = config.title || '캘린더 (Calendar)';
-    config.icon = '📅';
+    config.icon = (window.WidgetIcons && window.WidgetIcons.calendar) || '📅';
     config.width = typeof config.width === 'number' ? config.width : 380;
     config.height = typeof config.height === 'number' ? config.height : 360;
     config.minWidth = 260;

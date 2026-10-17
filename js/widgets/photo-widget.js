@@ -3,7 +3,7 @@ class PhotoWidget extends WidgetBase {
   constructor(board, config = {}) {
     config.type = 'photo';
     config.title = config.title || '사진 액자 (Photo)';
-    config.icon = '🖼️';
+    config.icon = (window.WidgetIcons && window.WidgetIcons.photo) || '🖼️';
     config.minWidth = 240;
     config.minHeight = 260;
     super(board, config);

@@ -373,23 +373,28 @@ html, body {
   overflow: hidden;
 }
 
-/* 동물의 숲 나뭇잎 배지 아이콘 */
+/* 동물의 숲 코티지코어 배지 아이콘 */
 .widget-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 26px;
-  height: 26px;
-  border-radius: 8px;
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
   background: var(--leaf-green-bg);
-  color: var(--leaf-green);
-  font-size: 14px;
+  border: 1.2px solid #d8e5d6;
   flex-shrink: 0;
+}
+
+.widget-icon svg {
+  width: 19px;
+  height: 19px;
+  display: block;
 }
 
 .widget-card.theme-dark .widget-icon {
   background: rgba(255, 255, 255, 0.15);
-  color: #a7f3d0;
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .widget-title {
@@ -594,8 +599,23 @@ html, body {
 }
 
 .dock-item-icon {
-  font-size: 26px;
-  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.dock-item-icon svg {
+  width: 30px;
+  height: 30px;
+  display: block;
+  filter: drop-shadow(0 2px 4px rgba(44, 68, 54, 0.18));
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dock-item:hover .dock-item-icon svg {
+  transform: scale(1.15);
 }
 
 .dock-divider {
@@ -666,7 +686,16 @@ html, body {
 }
 
 .ghost-icon {
-  font-size: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ghost-icon svg {
+  width: 44px;
+  height: 44px;
+  display: block;
+  filter: drop-shadow(0 4px 10px rgba(44, 68, 54, 0.25));
 }
 
 .ghost-title {

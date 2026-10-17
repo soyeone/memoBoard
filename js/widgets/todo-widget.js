@@ -3,7 +3,7 @@ class TodoWidget extends WidgetBase {
   constructor(board, config = {}) {
     config.type = 'todo';
     config.title = config.title || '할 일 목록 (Todo)';
-    config.icon = '✅';
+    config.icon = (window.WidgetIcons && window.WidgetIcons.todo) || '✅';
     config.minWidth = 260;
     config.minHeight = 280;
     super(board, config);

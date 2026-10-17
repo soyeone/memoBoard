@@ -3,7 +3,7 @@ class TimerWidget extends WidgetBase {
   constructor(board, config = {}) {
     config.type = 'timer';
     config.title = config.title || '집중 타이머 (Focus)';
-    config.icon = '⏱️';
+    config.icon = (window.WidgetIcons && window.WidgetIcons.timer) || '⏱️';
     config.minWidth = 280;
     config.minHeight = 320;
     super(board, config);

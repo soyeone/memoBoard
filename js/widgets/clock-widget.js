@@ -3,7 +3,7 @@ class ClockWidget extends WidgetBase {
   constructor(board, config = {}) {
     config.type = 'clock';
     config.title = config.title || '디지털 시계 (Clock)';
-    config.icon = '🕒';
+    config.icon = (window.WidgetIcons && window.WidgetIcons.clock) || '🕒';
     config.minWidth = 240;
     config.minHeight = 220;
     super(board, config);

@@ -3,7 +3,7 @@ class NoteWidget extends WidgetBase {
   constructor(board, config = {}) {
     config.type = 'note';
     config.title = config.title || '포스트잇 메모 (Note)';
-    config.icon = '📝';
+    config.icon = (window.WidgetIcons && window.WidgetIcons.note) || '📝';
     config.minWidth = 220;
     config.minHeight = 220;
     if (!config.theme) config.theme = 'yellow'; // 기본 노란색 포스트잇 테마
