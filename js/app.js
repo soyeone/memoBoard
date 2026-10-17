@@ -10,10 +10,9 @@ class App {
 
   init() {
     const canvas = document.getElementById('board-canvas');
-    const dockEl = document.getElementById('dock-launcher');
 
     this.board = new MemoBoard(canvas);
-    this.dock = new DockManager(dockEl, this.board);
+    this.contextMenu = new ContextMenuManager(this.board);
 
     this.applySettings();
     this.board.loadState();

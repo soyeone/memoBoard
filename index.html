@@ -5,7 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>메모 아일랜드 - Cozy Desktop Memo Board</title>
   <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/widgets.css">
+  <link rel="stylesheet" href="css/context-menu.css">
+  <link rel="stylesheet" href="css/widgets/widget-common.css">
+  <link rel="stylesheet" href="css/widgets/todo.css">
+  <link rel="stylesheet" href="css/widgets/calendar.css">
+  <link rel="stylesheet" href="css/widgets/note.css">
+  <link rel="stylesheet" href="css/widgets/clock.css">
+  <link rel="stylesheet" href="css/widgets/timer.css">
+  <link rel="stylesheet" href="css/widgets/photo.css">
 </head>
 <body class="theme-cottagecore">
 
@@ -60,9 +67,6 @@
 
     <!-- 메인 메모보드 캔버스 -->
     <main id="board-canvas"></main>
-
-    <!-- 하단 인터랙티브 플로팅 독 (위젯 런처) -->
-    <nav id="dock-launcher"></nav>
 
     <!-- 환경설정 모달 -->
     <div class="modal-overlay" id="settings-modal">
@@ -123,7 +127,7 @@
   <script src="js/widgets/note-widget.js"></script>
   <script src="js/widgets/clock-widget.js"></script>
   <script src="js/board.js"></script>
-  <script src="js/dock.js"></script>
+  <script src="js/context-menu.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

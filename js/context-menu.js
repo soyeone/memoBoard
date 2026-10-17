@@ -1,7 +1,6 @@
-// 보드 마우스 우클릭 위젯 메뉴 컨트롤러 (Context Menu Widget Drawer)
-class DockManager {
-  constructor(dockElement, memoBoard) {
-    this.dock = dockElement;
+// 보드 마우스 우클릭 위젯 메뉴 컨트롤러 (Board Context Menu Manager)
+class ContextMenuManager {
+  constructor(memoBoard) {
     this.board = memoBoard;
     this.isOpen = false;
     this.lastDropPos = { x: 100, y: 100 };
@@ -20,12 +19,6 @@ class DockManager {
   }
 
   initContextMenu() {
-    // 기존 하단 독 요소는 숨김 처리
-    if (this.dock) {
-      this.dock.style.display = 'none';
-    }
-
-    // 마우스 우클릭 시 나타날 커스텀 컨텍스트 메뉴 생성
     let menu = document.getElementById('board-context-menu');
     if (!menu) {
       menu = document.createElement('div');
@@ -88,7 +81,7 @@ class DockManager {
     let dropX = clientX - canvasRect.left + this.board.canvas.scrollLeft;
     let dropY = clientY - canvasRect.top + this.board.canvas.scrollTop;
 
-    // 약간의 오프셋 (마우스 위치 중앙 부근에 오도록 조정)
+    // 마우스 위치 기준 오프셋
     dropX = dropX - 40;
     dropY = dropY - 20;
 
@@ -211,4 +204,6 @@ class DockManager {
   }
 }
 
-window.DockManager = DockManager;
+// 하위 호환성을 위해 ContextMenuManager와 DockManager 둘 다 노출
+window.ContextMenuManager = ContextMenuManager;
+window.DockManager = ContextMenuManager;

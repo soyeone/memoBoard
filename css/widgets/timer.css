@@ -1,0 +1,151 @@
+/* --------------------------------------------------------
+   3. Focus Timer Widget
+-------------------------------------------------------- */
+.timer-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  padding: 14px 16px;
+  gap: 12px;
+}
+
+.timer-modes {
+  display: flex;
+  background: #f4efe5;
+  padding: 3px;
+  border-radius: 20px;
+  width: 100%;
+}
+
+.timer-mode-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 6px 3px;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.timer-mode-btn.active {
+  background: #ffffff;
+  color: var(--text-main);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.timer-dial-area {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 6px 0;
+}
+
+.timer-svg {
+  transform: rotate(-90deg);
+}
+
+.timer-circle-bg {
+  fill: none;
+  stroke: #ece5d8;
+}
+
+.timer-circle-progress {
+  fill: none;
+  stroke: var(--leaf-green);
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.8s linear, stroke 0.3s ease;
+}
+
+.stopwatch-pulse {
+  animation: pulseStroke 2s infinite ease-in-out;
+}
+
+@keyframes pulseStroke {
+  0%, 100% { stroke: #588157; }
+  50% { stroke: #e09f3e; }
+}
+
+.timer-display {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.timer-time {
+  font-size: 36px;
+  font-weight: 900;
+  color: var(--text-main);
+  letter-spacing: -1px;
+}
+
+.timer-mode-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.timer-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  justify-content: center;
+}
+
+.timer-btn {
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 800;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+}
+
+.timer-btn-toggle {
+  background: var(--leaf-green);
+  color: #fff;
+  padding: 8px 26px;
+  box-shadow: 0 4px 12px rgba(88, 129, 87, 0.3);
+}
+
+.timer-btn-toggle:hover {
+  background: var(--leaf-green-light);
+  transform: translateY(-1px);
+}
+
+.timer-btn-toggle.is-running {
+  background: var(--accent-gold);
+  box-shadow: 0 4px 12px rgba(224, 159, 62, 0.35);
+}
+
+.timer-btn-reset {
+  background: #f5f0e6;
+  border: 1.5px solid #ded6c8;
+  color: var(--text-muted);
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  justify-content: center;
+}
+
+.timer-btn-reset:hover {
+  background: #eae3d4;
+  color: var(--text-main);
+}
+
+.timer-footer-info {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--text-muted);
+}

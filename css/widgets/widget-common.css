@@ -1,0 +1,264 @@
+/* ========================================================
+   위젯 공통 카드 스타일 (Animal Crossing Style Card)
+======================================================== */
+.widget-card {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  background: var(--card-bg);
+  border: 2px solid var(--card-border);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+  overflow: visible;
+  transition: box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.15s ease;
+}
+
+.widget-card:hover {
+  box-shadow: 0 12px 32px rgba(78, 68, 52, 0.12), 0 3px 8px rgba(78, 68, 52, 0.06);
+  border-color: #d8cebc;
+}
+
+.widget-card.is-dragging {
+  opacity: 0.94;
+  box-shadow: 0 20px 48px rgba(78, 68, 52, 0.22);
+  transform: scale(1.02);
+  cursor: grabbing !important;
+  transition: none !important;
+}
+
+.widget-card.is-pinned {
+  border-color: var(--wood-brown-light);
+}
+
+.widget-card.is-folded .widget-body,
+.widget-card.is-folded .resize-handles {
+  display: none !important;
+}
+
+.widget-card.is-closing {
+  transform: scale(0.92);
+  opacity: 0;
+  transition: all 0.18s ease-in;
+}
+
+/* 위젯 테마별 파스텔 코티지코어 색상 */
+.widget-card.theme-default {
+  background: #fdfcf9;
+  border-color: #e5dfd2;
+}
+
+.widget-card.theme-yellow {
+  background: #fffdf2;
+  border-color: #fae29f;
+}
+.widget-card.theme-yellow .widget-header {
+  border-bottom-color: #fae29f;
+}
+
+.widget-card.theme-blue {
+  background: #f4f8fb;
+  border-color: #c9e0ed;
+}
+.widget-card.theme-blue .widget-header {
+  border-bottom-color: #c9e0ed;
+}
+
+.widget-card.theme-mint {
+  background: #f2f7f2;
+  border-color: #c7ded0;
+}
+.widget-card.theme-mint .widget-header {
+  border-bottom-color: #c7ded0;
+}
+
+.widget-card.theme-purple {
+  background: #fbf6fd;
+  border-color: #e8d7f2;
+}
+.widget-card.theme-purple .widget-header {
+  border-bottom-color: #e8d7f2;
+}
+
+.widget-card.theme-rose {
+  background: #fdf5f5;
+  border-color: #f7d2d2;
+}
+.widget-card.theme-rose .widget-header {
+  border-bottom-color: #f7d2d2;
+}
+
+.widget-card.theme-dark {
+  background: #2c4436;
+  border-color: #1e3327;
+  color: #f4f1ea;
+}
+.widget-card.theme-dark .widget-title,
+.widget-card.theme-dark .widget-header {
+  color: #f4f1ea;
+}
+.widget-card.theme-dark .widget-btn {
+  color: #e2dbcd;
+}
+
+/* 위젯 헤더 */
+.widget-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  border-bottom: 1.5px solid #f0ebe0;
+  cursor: grab;
+  border-radius: var(--card-radius) var(--card-radius) 0 0;
+}
+
+.widget-title-area {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow: hidden;
+}
+
+/* 동물의 숲 코티지코어 배지 아이콘 */
+.widget-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
+  background: var(--leaf-green-bg);
+  border: 1.2px solid #d8e5d6;
+  flex-shrink: 0;
+}
+
+.widget-icon svg {
+  width: 19px;
+  height: 19px;
+  display: block;
+}
+
+.widget-card.theme-dark .widget-icon {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.widget-title {
+  display: none !important;
+}
+
+.widget-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 8px;
+  flex-shrink: 0;
+}
+
+.widget-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: none;
+  background: #f4f0e6;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.widget-btn:hover {
+  background: #e6dfd1;
+  color: var(--text-main);
+  transform: scale(1.1);
+}
+
+.widget-btn.btn-close:hover {
+  background: #f28482;
+  color: #fff;
+}
+
+.widget-btn.btn-pin.active {
+  background: var(--leaf-green);
+  color: #fff;
+}
+
+/* 위젯 컬러 팔레트 */
+.widget-color-palette {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #f5f0e6;
+  border-bottom: 1px solid #e8e0d0;
+  animation: fadeIn 0.15s ease;
+}
+
+.palette-chip {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  transition: transform 0.15s ease;
+}
+
+.palette-chip:hover {
+  transform: scale(1.3);
+}
+
+.palette-chip.color-default { background: #fdfcf9; }
+.palette-chip.color-yellow  { background: #fae29f; }
+.palette-chip.color-blue    { background: #c9e0ed; }
+.palette-chip.color-mint    { background: #c7ded0; }
+.palette-chip.color-purple  { background: #e8d7f2; }
+.palette-chip.color-rose    { background: #f7d2d2; }
+.palette-chip.color-dark    { background: #2c4436; }
+
+/* 위젯 본문 */
+.widget-body {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  border-radius: 0 0 var(--card-radius) var(--card-radius);
+}
+
+/* 8방향 리사이즈 핸들러 */
+.resize-handles {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+}
+
+.resize-handle {
+  position: absolute;
+  pointer-events: auto;
+  z-index: 100;
+}
+
+.rh-e { top: 10px; bottom: 10px; right: -5px; width: 10px; cursor: e-resize; }
+.rh-w { top: 10px; bottom: 10px; left: -5px; width: 10px; cursor: w-resize; }
+.rh-s { left: 10px; right: 10px; bottom: -5px; height: 10px; cursor: s-resize; }
+.rh-n { left: 10px; right: 10px; top: -5px; height: 10px; cursor: n-resize; }
+
+.rh-se { right: -5px; bottom: -5px; width: 16px; height: 16px; cursor: se-resize; }
+.rh-sw { left: -5px; bottom: -5px; width: 16px; height: 16px; cursor: sw-resize; }
+.rh-ne { right: -5px; top: -5px; width: 16px; height: 16px; cursor: ne-resize; }
+.rh-nw { left: -5px; top: -5px; width: 16px; height: 16px; cursor: nw-resize; }
+
+.widget-card:hover .rh-se::after {
+  content: '';
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  width: 7px;
+  height: 7px;
+  border-right: 2.5px solid #a69989;
+  border-bottom: 2.5px solid #a69989;
+  border-radius: 1px;
+  pointer-events: none;
+}

@@ -1,0 +1,108 @@
+/* ========================================================
+   보드 마우스 우클릭 위젯 메뉴 (Animal Crossing Cottagecore Context Menu)
+======================================================== */
+#dock-launcher {
+  display: none !important;
+}
+
+.board-context-menu {
+  position: fixed;
+  z-index: 10000;
+  min-width: 175px;
+  background: rgba(253, 252, 249, 0.96);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 2px solid #dfd7c8;
+  border-radius: 18px;
+  box-shadow: 0 16px 36px rgba(44, 68, 54, 0.2), 0 4px 12px rgba(78, 68, 52, 0.08);
+  padding: 8px 6px;
+  user-select: none;
+  opacity: 0;
+  transform: scale(0.92) translateY(-4px);
+  transform-origin: top left;
+  pointer-events: none;
+  transition: opacity 0.16s cubic-bezier(0.16, 1, 0.3, 1), transform 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.board-context-menu.is-open {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  pointer-events: auto;
+}
+
+.ctx-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px 6px 10px;
+  font-size: 11px;
+  font-weight: 800;
+  color: #7c6f62;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.ctx-header-icon {
+  font-size: 13px;
+}
+
+.ctx-menu-list, .ctx-menu-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ctx-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  color: var(--text-main);
+}
+
+.ctx-menu-item:hover {
+  background: #eef3ec;
+  transform: translateX(3px);
+}
+
+.ctx-item-icon-box {
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ctx-item-icon-box svg {
+  width: 22px;
+  height: 22px;
+  filter: drop-shadow(0 2px 4px rgba(44, 68, 54, 0.15));
+}
+
+.ctx-item-name {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #3b3127;
+  letter-spacing: -0.2px;
+}
+
+.ctx-divider {
+  height: 1px;
+  background: #eae2d4;
+  margin: 5px 8px;
+}
+
+.ctx-action-item .ctx-item-icon-box svg {
+  width: 18px;
+  height: 18px;
+  color: var(--leaf-green);
+  filter: none;
+}
+
+.ctx-action-item:hover {
+  background: #f4eee2;
+}
