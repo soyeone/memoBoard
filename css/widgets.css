@@ -140,9 +140,16 @@
 .todo-list::-webkit-scrollbar {
   width: 5px;
 }
+.todo-list::-webkit-scrollbar-track {
+  background: transparent;
+}
 .todo-list::-webkit-scrollbar-thumb {
-  background: #d4ccbd;
+  background: transparent;
   border-radius: 3px;
+  transition: background-color 0.2s ease;
+}
+.todo-list:hover::-webkit-scrollbar-thumb {
+  background: #d4ccbd;
 }
 
 .todo-item {
@@ -1073,6 +1080,21 @@
 .note-textarea::placeholder {
   color: rgba(74, 67, 56, 0.42);
   font-weight: 500;
+}
+
+.note-textarea::-webkit-scrollbar {
+  width: 4px;
+}
+.note-textarea::-webkit-scrollbar-track {
+  background: transparent;
+}
+.note-textarea::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+.note-textarea:hover::-webkit-scrollbar-thumb {
+  background: rgba(141, 107, 79, 0.35);
 }
 
 /* ========================================================

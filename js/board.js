@@ -20,6 +20,60 @@ class MemoBoard {
   }
 
   initCanvasEvents() {
+    // 스크롤바 자동 숨김 & 스크롤/상호작용 시에만 표시 제어
+    let scrollTimer = null;
+    let isDraggingScrollbar = false;
+
+    const showScrollbar = (delay = 1000) => {
+      this.canvas.classList.add('is-scrolling');
+      if (scrollTimer) clearTimeout(scrollTimer);
+      if (!isDraggingScrollbar) {
+        scrollTimer = setTimeout(() => {
+          if (!isDraggingScrollbar) {
+            this.canvas.classList.remove('is-scrolling');
+          }
+        }, delay);
+      }
+    };
+
+    // 1. 실제 스크롤 및 마우스 휠 동작 시 즉시 활성화
+    this.canvas.addEventListener('scroll', () => showScrollbar(1000), { passive: true });
+    this.canvas.addEventListener('wheel', () => showScrollbar(1000), { passive: true });
+
+    // 2. 오른쪽/하단 스크롤바 영역에 마우스 접근 시 편리하게 잡을 수 있도록 활성화
+    this.canvas.addEventListener('mousemove', (e) => {
+      const rect = this.canvas.getBoundingClientRect();
+      const nearRight = (rect.right - e.clientX) <= 16;
+      const nearBottom = (rect.bottom - e.clientY) <= 16;
+      if (nearRight || nearBottom) {
+        showScrollbar(1200);
+      }
+    });
+
+    // 3. 스크롤바 클릭/드래그 조작 시 조작 중 사라지지 않도록 보호
+    this.canvas.addEventListener('mousedown', (e) => {
+      const rect = this.canvas.getBoundingClientRect();
+      const onRightBar = (rect.right - e.clientX) <= 16;
+      const onBottomBar = (rect.bottom - e.clientY) <= 16;
+      if (onRightBar || onBottomBar) {
+        isDraggingScrollbar = true;
+        this.canvas.classList.add('is-scrolling');
+      }
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (isDraggingScrollbar) {
+        isDraggingScrollbar = false;
+        showScrollbar(800);
+      }
+    });
+
+    this.canvas.addEventListener('mouseleave', () => {
+      if (!isDraggingScrollbar) {
+        showScrollbar(400);
+      }
+    });
+
     // 외부 이미지 파일을 캔버스에 직접 드롭 시 자동으로 사진 위젯 생성 지원
     this.canvas.addEventListener('dragover', (e) => {
       e.preventDefault();

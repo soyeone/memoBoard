@@ -1,209 +1,220 @@
-// 하단 인터랙티브 독 (플로팅 위젯 런처 및 단일 파이프라인 드래그 앤 드롭)
+// 보드 마우스 우클릭 위젯 메뉴 컨트롤러 (Context Menu Widget Drawer)
 class DockManager {
   constructor(dockElement, memoBoard) {
     this.dock = dockElement;
     this.board = memoBoard;
+    this.isOpen = false;
+    this.lastDropPos = { x: 100, y: 100 };
 
     this.items = [
-      { type: 'calendar', title: '캘린더', desc: '일정 및 월별 달력' },
-      { type: 'todo', title: 'Todo List', desc: '할 일 체크리스트 & 진행률' },
+      { type: 'todo', title: '오늘의 할 일', desc: 'Todo 리스트 & 달성률' },
+      { type: 'calendar', title: '일정 캘린더', desc: '월간 달력 & 메모' },
+      { type: 'note', title: '포스트잇', desc: '다채로운 빠른 메모' },
+      { type: 'photo', title: '사진 액자', desc: '이미지 업로드 & 갤러리' },
       { type: 'timer', title: '집중 타이머', desc: '뽀모도로 & 스톱워치' },
-      { type: 'photo', title: '사진 액자', desc: '이미지 업로드 & 클립보드 붙여넣기' },
-      { type: 'note', title: '포스트잇', desc: '다채로운 빠른 메모장' },
-      { type: 'clock', title: '시계', desc: '디지털 & 아날로그 시계' },
+      { type: 'clock', title: '아일랜드 시계', desc: '현재 시각 & 아날로그' },
     ];
 
-    this.render();
+    this.initContextMenu();
     this.bindEvents();
   }
 
-  render() {
-    this.dock.innerHTML = `
-      <div class="dock-container glass-panel">
-        <div class="dock-handle" title="하단 독 (보드로 아이콘을 끌어놓으세요)">
-          <div class="dock-pill"></div>
-        </div>
-        <div class="dock-items">
-          ${this.items.map(item => {
-            const svgIcon = (window.WidgetIcons && window.WidgetIcons[item.type]) || '';
-            return `
-              <div class="dock-item" 
-                   draggable="false"
-                   data-type="${item.type}" 
-                   data-title="${item.title}" 
-                   title="${item.title} (끌어서 보드에 배치하거나 클릭하세요)">
-                <div class="dock-item-icon">${svgIcon}</div>
-                <span class="dock-item-tooltip">${item.title}</span>
+  initContextMenu() {
+    // 기존 하단 독 요소는 숨김 처리
+    if (this.dock) {
+      this.dock.style.display = 'none';
+    }
+
+    // 마우스 우클릭 시 나타날 커스텀 컨텍스트 메뉴 생성
+    let menu = document.getElementById('board-context-menu');
+    if (!menu) {
+      menu = document.createElement('div');
+      menu.id = 'board-context-menu';
+      menu.className = 'board-context-menu';
+      document.body.appendChild(menu);
+    }
+    this.menu = menu;
+
+    this.renderMenu();
+  }
+
+  renderMenu() {
+    this.menu.innerHTML = `
+      <div class="ctx-header">
+        <span class="ctx-header-icon">🌿</span>
+        <span class="ctx-header-title">위젯 추가</span>
+      </div>
+      <div class="ctx-menu-list">
+        ${this.items.map(item => {
+          const svgIcon = (window.WidgetIcons && window.WidgetIcons[item.type]) || '';
+          return `
+            <div class="ctx-menu-item" data-type="${item.type}">
+              <div class="ctx-item-icon-box">${svgIcon}</div>
+              <div class="ctx-item-text">
+                <span class="ctx-item-name">${item.title}</span>
+                <span class="ctx-item-desc">${item.desc}</span>
               </div>
-            `;
-          }).join('')}
-
-          <div class="dock-divider"></div>
-
-          <div class="dock-action-btn" id="dock-btn-arrange" title="위젯 자동 바둑판 정렬">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            </div>
+          `;
+        }).join('')}
+      </div>
+      <div class="ctx-divider"></div>
+      <div class="ctx-menu-actions">
+        <div class="ctx-menu-item ctx-action-item" id="ctx-btn-arrange">
+          <div class="ctx-item-icon-box">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <rect x="3" y="3" width="7" height="7"></rect>
               <rect x="14" y="3" width="7" height="7"></rect>
               <rect x="14" y="14" width="7" height="7"></rect>
               <rect x="3" y="14" width="7" height="7"></rect>
             </svg>
-            <span class="dock-item-tooltip">자동 정렬</span>
           </div>
-
-          <div class="dock-action-btn" id="dock-btn-settings" title="보드 배경 & 설정">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <div class="ctx-item-text">
+            <span class="ctx-item-name">위젯 자동 정렬</span>
+          </div>
+        </div>
+        <div class="ctx-menu-item ctx-action-item" id="ctx-btn-settings">
+          <div class="ctx-item-icon-box">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="3"></circle>
               <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
             </svg>
-            <span class="dock-item-tooltip">보드 설정</span>
+          </div>
+          <div class="ctx-item-text">
+            <span class="ctx-item-name">보드 환경설정</span>
           </div>
         </div>
       </div>
     `;
   }
 
-  bindEvents() {
-    const dockItems = this.dock.querySelectorAll('.dock-item');
-    const arrangeBtn = this.dock.querySelector('#dock-btn-arrange');
-    const settingsBtn = this.dock.querySelector('#dock-btn-settings');
+  showMenu(clientX, clientY) {
+    const canvasRect = this.board.canvas.getBoundingClientRect();
+    
+    // 캔버스 내 스크롤 위치를 감안한 실제 배치 좌표 계산
+    let dropX = clientX - canvasRect.left + this.board.canvas.scrollLeft;
+    let dropY = clientY - canvasRect.top + this.board.canvas.scrollTop;
 
-    dockItems.forEach(item => {
-      const type = item.dataset.type;
-      const title = item.dataset.title;
-      const icon = (window.WidgetIcons && window.WidgetIcons[type]) || '';
+    // 약간의 오프셋 (마우스 위치 중앙 부근에 오도록 조정)
+    dropX = dropX - 40;
+    dropY = dropY - 20;
 
-      let isDragging = false;
-      let hasMovedSignificantly = false;
-      let ghostEl = null;
-      let startX = 0;
-      let startY = 0;
+    if (this.board.snapToGrid) {
+      dropX = Math.round(dropX / this.board.gridSize) * this.board.gridSize;
+      dropY = Math.round(dropY / this.board.gridSize) * this.board.gridSize;
+    }
 
-      item.addEventListener('dragstart', (e) => {
-        e.preventDefault();
-        return false;
-      });
+    this.lastDropPos = {
+      x: Math.max(20, dropX),
+      y: Math.max(20, dropY),
+    };
 
-      item.addEventListener('mousedown', (e) => {
-        if (e.button !== 0) return;
-        e.preventDefault();
+    // 메뉴를 화면에 표시하고 크기 측정
+    this.menu.style.display = 'block';
+    this.menu.classList.remove('is-open');
 
-        startX = e.clientX;
-        startY = e.clientY;
-        isDragging = true;
-        hasMovedSignificantly = false;
+    const menuRect = this.menu.getBoundingClientRect();
+    let posX = clientX;
+    let posY = clientY;
 
-        const onMouseMove = (moveEv) => {
-          if (!isDragging) return;
-          const dist = Math.hypot(moveEv.clientX - startX, moveEv.clientY - startY);
+    // 화면 오른쪽 / 하단 경계 벗어남 방지 (안쪽으로 뒤집거나 클램프)
+    if (posX + menuRect.width > window.innerWidth - 12) {
+      posX = clientX - menuRect.width;
+    }
+    if (posY + menuRect.height > window.innerHeight - 12) {
+      posY = clientY - menuRect.height;
+    }
 
-          if (!hasMovedSignificantly && dist > 8) {
-            hasMovedSignificantly = true;
-            ghostEl = document.createElement('div');
-            ghostEl.className = 'widget-ghost-preview';
-            ghostEl.innerHTML = `
-              <div class="ghost-icon">${icon}</div>
-              <div class="ghost-title">${title} 놓아서 배치</div>
-            `;
-            document.body.appendChild(ghostEl);
-            item.classList.add('is-dragging-source');
-          }
+    this.menu.style.left = `${Math.max(10, posX)}px`;
+    this.menu.style.top = `${Math.max(10, posY)}px`;
 
-          if (hasMovedSignificantly && ghostEl) {
-            ghostEl.style.left = `${moveEv.clientX}px`;
-            ghostEl.style.top = `${moveEv.clientY}px`;
-          }
-        };
-
-        const onMouseUp = (upEv) => {
-          if (!isDragging) return;
-          isDragging = false;
-
-          document.removeEventListener('mousemove', onMouseMove);
-          document.removeEventListener('mouseup', onMouseUp);
-          item.classList.remove('is-dragging-source');
-
-          if (ghostEl && ghostEl.parentNode) {
-            ghostEl.parentNode.removeChild(ghostEl);
-            ghostEl = null;
-          }
-
-          if (hasMovedSignificantly) {
-            const canvasRect = this.board.canvas.getBoundingClientRect();
-            const dockRect = this.dock.getBoundingClientRect();
-
-            const isInsideCanvas = (
-              upEv.clientX >= canvasRect.left &&
-              upEv.clientX <= canvasRect.right &&
-              upEv.clientY >= canvasRect.top &&
-              upEv.clientY <= canvasRect.bottom
-            );
-
-            const isOverDock = (
-              upEv.clientX >= dockRect.left &&
-              upEv.clientX <= dockRect.right &&
-              upEv.clientY >= dockRect.top &&
-              upEv.clientY <= dockRect.bottom
-            );
-
-            if (isInsideCanvas && !isOverDock) {
-              let dropX = upEv.clientX - canvasRect.left - 130;
-              let dropY = upEv.clientY - canvasRect.top - 40;
-
-              if (this.board.snapToGrid) {
-                dropX = Math.round(dropX / this.board.gridSize) * this.board.gridSize;
-                dropY = Math.round(dropY / this.board.gridSize) * this.board.gridSize;
-              }
-              dropX = Math.max(20, dropX);
-              dropY = Math.max(20, dropY);
-
-              this.board.addWidget(type, { x: dropX, y: dropY });
-            }
-          } else {
-            this.board.addWidget(type);
-          }
-        };
-
-        document.addEventListener('mousemove', onMouseMove);
-        document.addEventListener('mouseup', onMouseUp);
-      });
+    // 프레임 다음 틱에 열림 애니메이션 활성화
+    requestAnimationFrame(() => {
+      this.menu.classList.add('is-open');
+      this.isOpen = true;
     });
 
-    if (arrangeBtn) {
-      arrangeBtn.addEventListener('click', () => {
+    if (window.soundManager) window.soundManager.playPop();
+  }
+
+  hideMenu() {
+    if (!this.isOpen) return;
+    this.isOpen = false;
+    this.menu.classList.remove('is-open');
+    setTimeout(() => {
+      if (!this.isOpen) {
+        this.menu.style.display = 'none';
+      }
+    }, 180);
+  }
+
+  bindEvents() {
+    // 1. 보드 캔버스 우클릭 시 컨텍스트 메뉴 노출
+    this.board.canvas.addEventListener('contextmenu', (e) => {
+      // 텍스트 편집기나 인터랙티브 요소 내부 우클릭은 기본 브라우저 동작 유지
+      if (e.target.closest('input, textarea, [contenteditable="true"], button')) {
+        return;
+      }
+
+      // 위젯 카드 내부가 아닌 캔버스 배경 우클릭 시에만 팝업
+      if (!e.target.closest('.widget-card')) {
+        e.preventDefault();
+        this.showMenu(e.clientX, e.clientY);
+      }
+    });
+
+    // 2. 컨텍스트 메뉴 항목 클릭 시 위젯 생성
+    this.menu.addEventListener('click', (e) => {
+      const item = e.target.closest('.ctx-menu-item');
+      if (!item) return;
+
+      e.stopPropagation();
+
+      const type = item.dataset.type;
+      if (type) {
+        this.board.addWidget(type, {
+          x: this.lastDropPos.x,
+          y: this.lastDropPos.y,
+        });
+        this.hideMenu();
+        return;
+      }
+
+      if (item.id === 'ctx-btn-arrange') {
         this.board.arrangeWidgetsGrid();
-      });
-    }
+        this.hideMenu();
+        return;
+      }
 
-    if (settingsBtn) {
-      settingsBtn.addEventListener('click', () => {
-        window.app.toggleSettingsModal();
-      });
-    }
+      if (item.id === 'ctx-btn-settings') {
+        if (window.app) window.app.toggleSettingsModal();
+        this.hideMenu();
+        return;
+      }
+    });
 
-    const dockContainer = this.dock.querySelector('.dock-items');
-    if (dockContainer) {
-      dockContainer.addEventListener('mousemove', (e) => {
-        const allItems = dockContainer.querySelectorAll('.dock-item, .dock-action-btn');
-        allItems.forEach(el => {
-          const rect = el.getBoundingClientRect();
-          const centerX = rect.left + rect.width / 2;
-          const dist = Math.abs(e.clientX - centerX);
-          if (dist < 100) {
-            const scale = 1 + (0.35 * (1 - dist / 100));
-            el.style.transform = `scale(${scale}) translateY(-${(scale - 1) * 20}px)`;
-          } else {
-            el.style.transform = 'scale(1) translateY(0)';
-          }
-        });
-      });
+    // 3. 바깥 영역 클릭 시 닫기
+    document.addEventListener('pointerdown', (e) => {
+      if (this.isOpen && !this.menu.contains(e.target)) {
+        this.hideMenu();
+      }
+    });
 
-      dockContainer.addEventListener('mouseleave', () => {
-        const allItems = dockContainer.querySelectorAll('.dock-item, .dock-action-btn');
-        allItems.forEach(el => {
-          el.style.transform = 'scale(1) translateY(0)';
-        });
-      });
-    }
+    // 4. ESC 키 입력 시 닫기
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && this.isOpen) {
+        this.hideMenu();
+      }
+    });
+
+    // 5. 캔버스 스크롤 및 윈도우 크기 변경 시 닫기
+    this.board.canvas.addEventListener('scroll', () => {
+      if (this.isOpen) this.hideMenu();
+    }, { passive: true });
+
+    window.addEventListener('resize', () => {
+      if (this.isOpen) this.hideMenu();
+    });
   }
 }
 
