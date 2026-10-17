@@ -1323,110 +1323,136 @@
 }
 
 /* --------------------------------------------------------
-   6. Clock Widget
+   6. Clock Widget (Minimal Clean Clock)
+   - 평소: 투명 배경 & 닫기(X) 버튼 숨김, 시간과 날짜만 깔끔하게 노출
+   - 호버 시: 카드 배경과 오른쪽 위 닫기(X) 버튼이 부드럽게 노출
 -------------------------------------------------------- */
-.clock-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: 14px;
-}
-
-.clock-toolbar {
-  display: flex;
-  justify-content: flex-end;
-  gap: 6px;
-  margin-bottom: 4px;
-}
-
-.clock-mode-toggle, .clock-format-toggle {
-  background: #f4efe5;
-  border: 1px solid #ded6c8;
-  color: var(--text-muted);
-  border-radius: 8px;
-  font-size: 11px;
-  font-weight: 800;
-  padding: 3px 8px;
-  cursor: pointer;
-}
-
-.clock-mode-toggle:hover, .clock-format-toggle:hover {
-  background: #eae3d4;
-  color: var(--text-main);
-}
-
-.clock-digital-box {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.clock-time-display {
-  font-size: 40px;
-  font-weight: 900;
-  color: var(--text-main);
-  letter-spacing: -1px;
-}
-
-.clock-date-display {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--wood-brown);
-}
-
-.clock-analog-box {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-}
-
-.analog-svg {
+.widget-card.widget-clock {
+  background: transparent !important;
+  border: 2px solid transparent !important;
+  box-shadow: none !important;
+  transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease !important;
+  cursor: grab;
+  padding: 0;
   overflow: visible;
 }
 
-.analog-dial-bg {
-  fill: #fcfbf8;
-  stroke: #ded6c8;
-  stroke-width: 3;
+.widget-card.widget-clock:hover,
+.widget-card.widget-clock.is-dragging {
+  background: rgba(253, 252, 249, 0.95) !important;
+  border-color: var(--card-border) !important;
+  box-shadow: var(--card-shadow) !important;
+  backdrop-filter: blur(10px);
 }
 
-.analog-tick {
-  stroke: #c8beaf;
-  stroke-width: 2;
+/* 헤더 요소 정리: 불필요한 색상/접기/핀/제목 숨기고 오른쪽 상단 X버튼만 호버 시 표시 */
+.widget-card.widget-clock .widget-title-area,
+.widget-card.widget-clock .widget-color-palette,
+.widget-card.widget-clock .btn-color,
+.widget-card.widget-clock .btn-fold,
+.widget-card.widget-clock .btn-pin {
+  display: none !important;
 }
 
-.analog-tick.tick-major {
-  stroke: var(--text-main);
-  stroke-width: 3;
+.widget-card.widget-clock .widget-header {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  z-index: 10;
+  cursor: grab;
 }
 
-.analog-hand {
-  transform-origin: 100px 100px;
-  stroke-linecap: round;
-  transition: transform 0.05s cubic-bezier(0.4, 2.08, 0.55, 0.44);
+.widget-card.widget-clock .btn-close {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(238, 232, 222, 0.85);
+  color: #6e6153;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ded6c8;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, background-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
 }
 
-.hand-hour {
-  stroke: var(--text-main);
-  stroke-width: 4.5;
+.widget-card.widget-clock:hover .btn-close {
+  opacity: 1;
+  pointer-events: auto;
 }
 
-.hand-minute {
-  stroke: var(--wood-brown);
-  stroke-width: 3;
+.widget-card.widget-clock .btn-close:hover {
+  background: #f28482;
+  color: #ffffff;
+  border-color: #f28482;
+  transform: scale(1.08);
 }
 
-.hand-second {
-  stroke: #e76f51;
-  stroke-width: 1.8;
+.widget-card.widget-clock .widget-body {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
 }
 
-.analog-center-pin {
-  fill: #e76f51;
+/* 시계 본체: 시간 & 날짜 타이포그래피 */
+.clock-clean-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  width: 100%;
+  height: 100%;
+  user-select: none;
+  pointer-events: auto;
+}
+
+.clock-time-display {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  font-family: var(--font-main);
+  line-height: 1;
+}
+
+.clock-time-display .time-hm {
+  font-size: 42px;
+  font-weight: 900;
+  letter-spacing: -1.5px;
+  color: #3b3127;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+.clock-time-display .time-sec {
+  font-size: 19px;
+  font-weight: 700;
+  color: #8c7e6f;
+  margin-left: 2px;
+}
+
+.clock-date-display {
+  margin-top: 6px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #726253;
+  letter-spacing: -0.3px;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+/* 리사이즈 핸들: 평소 투명, 호버 시 노출 */
+.widget-card.widget-clock .resize-handle {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.widget-card.widget-clock:hover .resize-handle {
+  opacity: 1;
 }

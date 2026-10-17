@@ -25,6 +25,78 @@ class StorageManager {
     }
   }
 
+  // 캘린더 위젯 간 공통 일정 데이터 로드 (기존 캘린더 데이터 자동 마이그레이션 포함)
+  loadSharedCalendarEvents() {
+    try {
+      const raw = localStorage.getItem('desktop_memo_board_calendar_events_shared');
+      if (raw) {
+        return JSON.parse(raw);
+      }
+
+      // 공유 키에 아직 없다면 기존 보드 상태의 캘린더 위젯에서 일정 데이터 마이그레이션
+      const boardState = this.loadBoardState();
+      if (Array.isArray(boardState)) {
+        for (const w of boardState) {
+          if (w.type === 'calendar' && w.data && w.data.events && Object.keys(w.data.events).length > 0) {
+            this.saveSharedCalendarEvents(w.data.events);
+            return w.data.events;
+          }
+        }
+      }
+      return null;
+    } catch (e) {
+      console.error('Failed to load shared calendar events', e);
+      return null;
+    }
+  }
+
+  // 캘린더 공통 일정 데이터 저장
+  saveSharedCalendarEvents(events) {
+    try {
+      if (events && typeof events === 'object') {
+        localStorage.setItem('desktop_memo_board_calendar_events_shared', JSON.stringify(events));
+      }
+    } catch (e) {
+      console.error('Failed to save shared calendar events', e);
+    }
+  }
+
+  // Todo 위젯 간 공통 할 일 목록 로드 (기존 위젯 데이터 자동 마이그레이션 포함)
+  loadSharedTodos() {
+    try {
+      const raw = localStorage.getItem('desktop_memo_board_todos_shared');
+      if (raw) {
+        return JSON.parse(raw);
+      }
+
+      // 공유 키에 아직 없다면 기존 보드 상태의 Todo 위젯에서 할 일 목록 마이그레이션
+      const boardState = this.loadBoardState();
+      if (Array.isArray(boardState)) {
+        for (const w of boardState) {
+          if (w.type === 'todo' && w.data && Array.isArray(w.data.todos) && w.data.todos.length > 0) {
+            this.saveSharedTodos(w.data.todos);
+            return w.data.todos;
+          }
+        }
+      }
+      return null;
+    } catch (e) {
+      console.error('Failed to load shared todos', e);
+      return null;
+    }
+  }
+
+  // Todo 위젯 공통 할 일 목록 저장
+  saveSharedTodos(todos) {
+    try {
+      if (Array.isArray(todos)) {
+        localStorage.setItem('desktop_memo_board_todos_shared', JSON.stringify(todos));
+      }
+    } catch (e) {
+      console.error('Failed to save shared todos', e);
+    }
+  }
+
   loadSettings() {
     try {
       const raw = localStorage.getItem(this.SETTINGS_KEY);

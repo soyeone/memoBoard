@@ -7,12 +7,12 @@ class DockManager {
     this.lastDropPos = { x: 100, y: 100 };
 
     this.items = [
-      { type: 'todo', title: '오늘의 할 일', desc: 'Todo 리스트 & 달성률' },
-      { type: 'calendar', title: '일정 캘린더', desc: '월간 달력 & 메모' },
-      { type: 'note', title: '포스트잇', desc: '다채로운 빠른 메모' },
-      { type: 'photo', title: '사진 액자', desc: '이미지 업로드 & 갤러리' },
-      { type: 'timer', title: '집중 타이머', desc: '뽀모도로 & 스톱워치' },
-      { type: 'clock', title: '아일랜드 시계', desc: '현재 시각 & 아날로그' },
+      { type: 'todo', title: '오늘의 할 일' },
+      { type: 'calendar', title: '일정 캘린더' },
+      { type: 'note', title: '포스트잇' },
+      { type: 'photo', title: '사진 액자' },
+      { type: 'timer', title: '집중 타이머' },
+      { type: 'clock', title: '시계' },
     ];
 
     this.initContextMenu();
@@ -50,10 +50,7 @@ class DockManager {
           return `
             <div class="ctx-menu-item" data-type="${item.type}">
               <div class="ctx-item-icon-box">${svgIcon}</div>
-              <div class="ctx-item-text">
-                <span class="ctx-item-name">${item.title}</span>
-                <span class="ctx-item-desc">${item.desc}</span>
-              </div>
+              <span class="ctx-item-name">${item.title}</span>
             </div>
           `;
         }).join('')}
@@ -69,9 +66,7 @@ class DockManager {
               <rect x="3" y="14" width="7" height="7"></rect>
             </svg>
           </div>
-          <div class="ctx-item-text">
-            <span class="ctx-item-name">위젯 자동 정렬</span>
-          </div>
+          <span class="ctx-item-name">위젯 자동 정렬</span>
         </div>
         <div class="ctx-menu-item ctx-action-item" id="ctx-btn-settings">
           <div class="ctx-item-icon-box">
@@ -80,9 +75,7 @@ class DockManager {
               <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
             </svg>
           </div>
-          <div class="ctx-item-text">
-            <span class="ctx-item-name">보드 환경설정</span>
-          </div>
+          <span class="ctx-item-name">보드 환경설정</span>
         </div>
       </div>
     `;

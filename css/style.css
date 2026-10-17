@@ -572,12 +572,12 @@ html, body {
 .board-context-menu {
   position: fixed;
   z-index: 10000;
-  min-width: 215px;
-  background: rgba(253, 252, 249, 0.95);
+  min-width: 175px;
+  background: rgba(253, 252, 249, 0.96);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 2px solid #dfd7c8;
-  border-radius: 20px;
+  border-radius: 18px;
   box-shadow: 0 16px 36px rgba(44, 68, 54, 0.2), 0 4px 12px rgba(78, 68, 52, 0.08);
   padding: 8px 6px;
   user-select: none;
@@ -598,7 +598,7 @@ html, body {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 12px 4px 12px;
+  padding: 4px 10px 6px 10px;
   font-size: 11px;
   font-weight: 800;
   color: #7c6f62;
@@ -620,7 +620,7 @@ html, body {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 6px 10px;
+  padding: 7px 10px;
   border-radius: 12px;
   cursor: pointer;
   transition: background-color 0.15s ease, transform 0.15s cubic-bezier(0.16, 1, 0.3, 1);
@@ -633,8 +633,8 @@ html, body {
 }
 
 .ctx-item-icon-box {
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -642,33 +642,22 @@ html, body {
 }
 
 .ctx-item-icon-box svg {
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   filter: drop-shadow(0 2px 4px rgba(44, 68, 54, 0.15));
 }
 
-.ctx-item-text {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.25;
-}
-
 .ctx-item-name {
-  font-size: 13px;
+  font-size: 13.5px;
   font-weight: 700;
   color: #3b3127;
-}
-
-.ctx-item-desc {
-  font-size: 11px;
-  color: #8c7e6f;
-  font-weight: 500;
+  letter-spacing: -0.2px;
 }
 
 .ctx-divider {
   height: 1px;
   background: #eae2d4;
-  margin: 6px 8px;
+  margin: 5px 8px;
 }
 
 .ctx-action-item .ctx-item-icon-box svg {

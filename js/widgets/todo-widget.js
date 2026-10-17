@@ -8,17 +8,62 @@ class TodoWidget extends WidgetBase {
     config.minHeight = 280;
     super(board, config);
 
-    // 내부 데이터 안전 초기화
+    // Todo 목록 동기화 로직:
+    // 1) 공유 스토리지에서 먼저 로드
+    // 2) 보드에 이미 존재하는 다른 Todo 위젯의 최신 todos 참조
+    // 3) 전달된 config.data.todos 참조
+    // 4) 아무것도 없으면 기본 샘플
+    let initialTodos = null;
+    if (window.storageManager && typeof window.storageManager.loadSharedTodos === 'function') {
+      initialTodos = window.storageManager.loadSharedTodos();
+    }
+
+    if (!initialTodos && this.board && Array.isArray(this.board.widgets)) {
+      const existingTodo = this.board.widgets.find(w => w.type === 'todo' && w !== this && Array.isArray(w.todos));
+      if (existingTodo) {
+        initialTodos = JSON.parse(JSON.stringify(existingTodo.todos));
+      }
+    }
+
+    if (!initialTodos && Array.isArray(this.data && this.data.todos)) {
+      initialTodos = this.data.todos;
+    }
+
     const defaultTodos = [
       { id: 't_1', text: '위젯 원하는 위치로 드래그해보기', done: true },
-      { id: 't_2', text: '하단 독에서 새 위젯 추가하기', done: false },
+      { id: 't_2', text: '보드 우클릭으로 새 위젯 추가하기', done: false },
       { id: 't_3', text: '모서리 잡고 크기 조절하기', done: false },
     ];
 
-    this.todos = Array.isArray(this.data.todos) ? this.data.todos : defaultTodos;
-    this.filter = this.data.filter || 'all'; // all, active, completed
+    this.todos = initialTodos || defaultTodos;
+    this.filter = (this.data && this.data.filter) || 'all';
+
+    if (window.storageManager && typeof window.storageManager.saveSharedTodos === 'function') {
+      window.storageManager.saveSharedTodos(this.todos);
+    }
 
     // 렌더링 시작
+    this.render();
+  }
+
+  // 할 일 목록 변경 시 공유 스토리지 및 보드 상의 모든 Todo 위젯과 실시간 동기화
+  updateSharedTodos(newTodos) {
+    this.todos = newTodos;
+    if (window.storageManager && typeof window.storageManager.saveSharedTodos === 'function') {
+      window.storageManager.saveSharedTodos(this.todos);
+    }
+
+    // 보드 상의 다른 모든 Todo 인스턴스에 즉각 전파 및 리렌더링
+    if (this.board && Array.isArray(this.board.widgets)) {
+      this.board.widgets.forEach(w => {
+        if (w.type === 'todo' && w !== this) {
+          w.todos = this.todos;
+          w.render();
+        }
+      });
+    }
+
+    this.board.saveState();
     this.render();
   }
 
@@ -124,8 +169,7 @@ class TodoWidget extends WidgetBase {
 
         window.soundManager.playPop();
         input.value = '';
-        this.board.saveState();
-        this.render();
+        this.updateSharedTodos(this.todos);
       });
     }
 
@@ -151,8 +195,7 @@ class TodoWidget extends WidgetBase {
           if (target.done) {
             window.soundManager.playSuccess();
           }
-          this.board.saveState();
-          this.render();
+          this.updateSharedTodos(this.todos);
         }
       }
     });
@@ -166,8 +209,7 @@ class TodoWidget extends WidgetBase {
         if (!item) return;
         const id = item.dataset.id;
         this.todos = this.todos.filter(t => t.id !== id);
-        this.board.saveState();
-        this.render();
+        this.updateSharedTodos(this.todos);
       }
     });
 
@@ -192,8 +234,7 @@ class TodoWidget extends WidgetBase {
         } else {
           this.todos = this.todos.filter(t => t.id !== id);
         }
-        this.board.saveState();
-        this.render();
+        this.updateSharedTodos(this.todos);
       };
 
       textEl.addEventListener('blur', finishEdit, { once: true });

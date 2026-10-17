@@ -287,11 +287,11 @@ class MemoBoard {
 
     // 6. 시계 (우측 하단)
     this.addWidget('clock', {
-      x: 726,
+      x: 734,
       y: 438,
-      width: 308,
-      height: 240,
-      title: '아일랜드 시계',
+      width: 220,
+      height: 120,
+      title: '시계',
       theme: 'default',
     });
   }

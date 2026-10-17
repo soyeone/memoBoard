@@ -17,12 +17,57 @@ class CalendarWidget extends WidgetBase {
     this.currentMonth = typeof this.data.month === 'number' ? this.data.month : now.getMonth();
     this.selectedDate = this.data.selectedDate || todayStr;
 
-    // 기본 일정 샘플
-    this.events = this.data.events || {
+    // 캘린더 일정 동기화 로직:
+    // 1) 공유 스토리지에서 먼저 로드
+    // 2) 보드에 이미 존재하는 다른 캘린더 위젯의 최신 events 참조
+    // 3) 전달된 config.data.events 참조
+    // 4) 아무것도 없으면 오늘 날짜의 기본 일정 샘플
+    let initialEvents = null;
+    if (window.storageManager && typeof window.storageManager.loadSharedCalendarEvents === 'function') {
+      initialEvents = window.storageManager.loadSharedCalendarEvents();
+    }
+
+    if (!initialEvents && this.board && Array.isArray(this.board.widgets)) {
+      const existingCal = this.board.widgets.find(w => w.type === 'calendar' && w !== this && w.events);
+      if (existingCal) {
+        initialEvents = JSON.parse(JSON.stringify(existingCal.events));
+      }
+    }
+
+    if (!initialEvents && this.data && this.data.events) {
+      initialEvents = this.data.events;
+    }
+
+    this.events = initialEvents || {
       [todayStr]: ['메모보드 확인하기', '중요 일정']
     };
 
+    if (window.storageManager && typeof window.storageManager.saveSharedCalendarEvents === 'function') {
+      window.storageManager.saveSharedCalendarEvents(this.events);
+    }
+
     this.activeModal = null;
+    this.render();
+  }
+
+  // 캘린더 일정 변경 시 공유 스토리지 및 보드 상의 모든 캘린더 위젯과 실시간 동기화
+  updateSharedEvents(newEvents) {
+    this.events = newEvents;
+    if (window.storageManager && typeof window.storageManager.saveSharedCalendarEvents === 'function') {
+      window.storageManager.saveSharedCalendarEvents(this.events);
+    }
+
+    // 보드 상의 다른 모든 캘린더 인스턴스에 즉각 전파 및 리렌더링
+    if (this.board && Array.isArray(this.board.widgets)) {
+      this.board.widgets.forEach(w => {
+        if (w.type === 'calendar' && w !== this) {
+          w.events = this.events;
+          w.render();
+        }
+      });
+    }
+
+    this.board.saveState();
     this.render();
   }
 
@@ -314,8 +359,7 @@ class CalendarWidget extends WidgetBase {
 
       document.removeEventListener('keydown', onKey);
       this.closeModal();
-      this.board.saveState();
-      this.render();
+      this.updateSharedEvents(this.events);
     });
   }
 
@@ -407,8 +451,7 @@ class CalendarWidget extends WidgetBase {
 
       document.removeEventListener('keydown', onKey);
       this.closeModal();
-      this.board.saveState();
-      this.render();
+      this.updateSharedEvents(this.events);
     });
 
     // 삭제 버튼 클릭
@@ -424,8 +467,7 @@ class CalendarWidget extends WidgetBase {
 
       document.removeEventListener('keydown', onKey);
       this.closeModal();
-      this.board.saveState();
-      this.render();
+      this.updateSharedEvents(this.events);
     });
   }
 }
