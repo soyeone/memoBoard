@@ -912,9 +912,10 @@
 -------------------------------------------------------- */
 .widget-card.widget-note {
   border-radius: 4px !important;
-  background: #dce3d5; /* 레퍼런스 시그니처 세이지 그린 */
-  border: 1px solid rgba(141, 107, 79, 0.22) !important;
-  box-shadow: 0 10px 28px rgba(78, 68, 52, 0.14), 0 2px 6px rgba(78, 68, 52, 0.06) !important;
+  background: #d4ceb6 !important; /* 레퍼런스 1번째 줄 2번째 종이 색상 (차분하고 온화한 올리브 베이지) */
+  border: 1px solid rgba(110, 100, 80, 0.22) !important;
+  box-shadow: 0 10px 26px rgba(60, 52, 40, 0.12), 0 2px 6px rgba(60, 52, 40, 0.05) !important;
+  color: #3d372e !important;
   padding: 0;
   overflow: visible !important;
 }
@@ -940,28 +941,39 @@
   box-sizing: border-box;
 }
 
-/* 상단 마스킹 테이프 (Washi Tape Sticker) */
+/* 상단 마스킹 테이프 (종이 질감 Washi Tape & 손으로 찢은 톱니형 끝단 컷) */
 .note-tape {
   position: absolute;
   top: -10px;
   left: 50%;
-  transform: translateX(-50%) rotate(-0.6deg);
-  width: 72px;
+  transform: translateX(-50%) rotate(-0.5deg);
+  width: 76px;
   height: 22px;
-  background: rgba(246, 241, 230, 0.82);
-  box-shadow: 0 1px 4px rgba(78, 68, 52, 0.16), inset 0 0 0 1px rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(2px);
-  border-left: 2px dashed rgba(180, 168, 150, 0.5);
-  border-right: 2px dashed rgba(180, 168, 150, 0.5);
+  background-color: rgba(234, 227, 211, 0.82);
+  background-image: 
+    /* 미세한 주름 및 빛 반사 효과 */
+    linear-gradient(105deg, transparent 32%, rgba(255, 255, 255, 0.42) 42%, rgba(0, 0, 0, 0.03) 48%, transparent 58%),
+    /* 종이 테이프 미세 섬유질 질감 */
+    repeating-linear-gradient(90deg, transparent, transparent 2.5px, rgba(255, 255, 255, 0.14) 2.5px, rgba(255, 255, 255, 0.14) 5px);
+  box-shadow: 0 1.5px 4px rgba(60, 52, 40, 0.16), inset 0 0 1px 1px rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(1.5px);
+  /* 손으로 찢은 듯한 자연스러운 톱니형 엣지 컷 (Torn paper edges) */
+  clip-path: polygon(
+    0% 4%, 2% 0%, 98% 1%, 100% 4%,
+    98% 12%, 100% 22%, 98% 32%, 100% 44%, 98% 54%, 100% 64%, 98% 74%, 100% 86%, 98% 96%, 100% 100%,
+    98% 99%, 2% 100%, 0% 97%,
+    2% 88%, 0% 78%, 2% 68%, 0% 56%, 2% 46%, 0% 34%, 2% 24%, 0% 14%
+  );
   cursor: grab;
   z-index: 20;
   pointer-events: auto;
-  transition: background 0.15s ease, transform 0.15s ease;
+  transition: background-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .note-tape:hover {
-  background: rgba(246, 241, 230, 0.95);
+  background-color: rgba(238, 232, 218, 0.94);
   transform: translateX(-50%) rotate(0deg) scale(1.02);
+  box-shadow: 0 2.5px 6px rgba(60, 52, 40, 0.22);
 }
 
 .note-tape:active {
@@ -989,8 +1001,8 @@
   border-radius: 50%;
   background: transparent;
   border: none;
-  color: var(--text-muted);
-  opacity: 0.45;
+  color: #4a4338;
+  opacity: 0.42;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -1003,22 +1015,22 @@
 
 .note-btn-close:hover {
   opacity: 1;
-  color: #d64545;
-  background: rgba(0, 0, 0, 0.08);
+  color: #c94438;
+  background: rgba(0, 0, 0, 0.06);
 }
 
-/* 메모 본문 textarea */
+/* 메모 본문 textarea (다른 위젯과 동일한 Pretendard / Nunito 폰트 적용) */
 .note-textarea {
   flex: 1;
   width: 100%;
   height: 100%;
   border: none;
   background: transparent;
-  color: var(--text-main);
-  font-family: 'Gaegu', 'Pretendard', sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 1.6;
+  color: #3d372e;
+  font-family: var(--font-main) !important;
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.65;
   padding: 22px 14px 12px 14px;
   resize: none;
   outline: none;
@@ -1029,43 +1041,43 @@
 }
 
 .note-textarea::placeholder {
-  color: rgba(124, 111, 98, 0.45);
-  font-weight: 400;
+  color: rgba(74, 67, 56, 0.45);
+  font-weight: 500;
 }
 
-/* 종이 컬러 테마 (레퍼런스 이미지 팔레트) */
+/* 종이 컬러 테마 (기본은 레퍼런스 1행 2열 색상) */
 .widget-card.widget-note.theme-default {
-  background: #dce3d5; /* 레퍼런스 시그니처 세이지 그린 */
-  color: #2c4436;
+  background: #d4ceb6 !important;
+  color: #3d372e !important;
 }
 
 .widget-card.widget-note.theme-yellow {
-  background: #fbf5dc; /* 부드러운 버터 크림 */
-  color: #4a3b32;
+  background: #fbf5dc !important;
+  color: #4a3b32 !important;
 }
 
 .widget-card.widget-note.theme-blue {
-  background: #e1ebf0; /* 파스텔 스카이 페이퍼 */
-  color: #2d424e;
+  background: #e1ebf0 !important;
+  color: #2d424e !important;
 }
 
 .widget-card.widget-note.theme-mint {
-  background: #d9e6de; /* 내추럴 민트 페이퍼 */
-  color: #264336;
+  background: #d9e6de !important;
+  color: #264336 !important;
 }
 
 .widget-card.widget-note.theme-purple {
-  background: #ebe3f2; /* 라벤더 페이퍼 */
-  color: #42324f;
+  background: #ebe3f2 !important;
+  color: #42324f !important;
 }
 
 .widget-card.widget-note.theme-rose {
-  background: #faece7; /* 피치 핑크 페이퍼 */
-  color: #54332e;
+  background: #faece7 !important;
+  color: #54332e !important;
 }
 
 .widget-card.widget-note.theme-dark {
-  background: #888d75; /* 레퍼런스 좌하단 딥 올리브 카키 */
+  background: #888d75 !important;
   border-color: rgba(60, 65, 50, 0.4) !important;
 }
 .widget-card.widget-note.theme-dark .note-textarea {
@@ -1075,7 +1087,7 @@
   color: #fcfbf7;
 }
 .widget-card.widget-note.theme-dark .note-tape {
-  background: rgba(220, 215, 200, 0.75);
+  background-color: rgba(220, 215, 200, 0.78);
 }
 
 /* --------------------------------------------------------
