@@ -1,20 +1,19 @@
-// 포스트잇 메모 위젯 (자유로운 텍스트 작성 및 크기/테마 조절)
+// 포스트잇 메모 위젯 (Pinterest 마스킹 테이프 & 미니멀 페이퍼 디자인)
 class NoteWidget extends WidgetBase {
   constructor(board, config = {}) {
     config.type = 'note';
-    config.title = config.title || '포스트잇 메모 (Note)';
+    config.title = config.title || '메모';
     config.icon = (window.WidgetIcons && window.WidgetIcons.note) || '📝';
-    config.minWidth = 220;
-    config.minHeight = 220;
-    if (!config.theme) config.theme = 'yellow'; // 기본 노란색 포스트잇 테마
+    config.width = typeof config.width === 'number' ? config.width : 220;
+    config.height = typeof config.height === 'number' ? config.height : 220;
+    config.minWidth = 160;
+    config.minHeight = 150;
+    if (!config.theme) config.theme = 'default'; // 세이지 그린 기본
     super(board, config);
 
-    // 내부 데이터 안전 초기화
     this.content = typeof this.data.content === 'string' 
       ? this.data.content 
-      : '여기에 자유롭게 메모를 적어보세요!\n\n• 원하는 위치로 드래그\n• 모서리를 잡고 크기 조절\n• 헤더의 색상 버튼으로 포스트잇 색 변경!';
-
-    this.fontSize = this.data.fontSize || 'medium'; // small, medium, large
+      : '기록하고 싶은 메모를\n자유롭게 적어보세요 🌿';
 
     this.render();
   }
@@ -22,7 +21,6 @@ class NoteWidget extends WidgetBase {
   getData() {
     return {
       content: this.content,
-      fontSize: this.fontSize,
     };
   }
 
@@ -30,16 +28,20 @@ class NoteWidget extends WidgetBase {
     if (!this.bodyElement) return;
 
     this.bodyElement.innerHTML = `
-      <div class="note-container font-${this.fontSize}">
-        <div class="note-toolbar">
-          <div class="note-font-selector">
-            <button type="button" class="note-font-btn ${this.fontSize === 'small' ? 'active' : ''}" data-size="small" title="작은 글씨">A-</button>
-            <button type="button" class="note-font-btn ${this.fontSize === 'medium' ? 'active' : ''}" data-size="medium" title="보통 글씨">A</button>
-            <button type="button" class="note-font-btn ${this.fontSize === 'large' ? 'active' : ''}" data-size="large" title="큰 글씨">A+</button>
-          </div>
-          <span class="note-char-count">${this.content.length}자</span>
-        </div>
-        <textarea class="note-textarea" placeholder="생각나는 아이디어나 메모를 적어보세요..." spellcheck="false">${this.escapeHtml(this.content)}</textarea>
+      <div class="note-paper">
+        <!-- 상단 마스킹 테이프 스티커 -->
+        <div class="note-tape" title="드래그하여 이동"></div>
+        <!-- 상단 드래그 핸들 영역 -->
+        <div class="note-paper-top" title="드래그하여 이동"></div>
+        <!-- 오른쪽 위 깔끔한 닫기 x 버튼 -->
+        <button type="button" class="note-btn-close" title="포스트잇 닫기" aria-label="닫기">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+        <!-- 메모 텍스트 작성 영역 -->
+        <textarea class="note-textarea" placeholder="생각나는 메모를 적어보세요..." spellcheck="false">${this.escapeHtml(this.content)}</textarea>
       </div>
     `;
 
@@ -54,32 +56,39 @@ class NoteWidget extends WidgetBase {
 
   bindNoteEvents() {
     const textarea = this.bodyElement.querySelector('.note-textarea');
-    const fontBtns = this.bodyElement.querySelectorAll('.note-font-btn');
-    const charCount = this.bodyElement.querySelector('.note-char-count');
+    const tape = this.bodyElement.querySelector('.note-tape');
+    const paperTop = this.bodyElement.querySelector('.note-paper-top');
+    const closeBtn = this.bodyElement.querySelector('.note-btn-close');
 
+    // 상단 마스킹 테이프 및 여백 드래그로 위젯 이동
+    const onDragStart = (e) => {
+      if (e.target.closest('.note-btn-close')) return;
+      if (this.isPinned) return;
+      this.startDrag(e);
+    };
+
+    if (tape) tape.addEventListener('mousedown', onDragStart);
+    if (paperTop) paperTop.addEventListener('mousedown', onDragStart);
+
+    // 오른쪽 위 닫기(x) 버튼
+    if (closeBtn) {
+      closeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.destroy();
+      });
+    }
+
+    // 텍스트 영역 입력 및 선택 이벤트
     if (textarea) {
-      // 텍스트 영역 클릭 시 상위 드래그 이벤트 간섭 방지
       textarea.addEventListener('mousedown', (e) => {
         e.stopPropagation();
       });
 
       textarea.addEventListener('input', (e) => {
         this.content = e.target.value;
-        if (charCount) {
-          charCount.textContent = `${this.content.length}자`;
-        }
         this.board.saveState();
       });
     }
-
-    fontBtns.forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        this.fontSize = btn.dataset.size;
-        this.board.saveState();
-        this.render();
-      });
-    });
   }
 }
 
