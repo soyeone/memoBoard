@@ -53,7 +53,6 @@ class WidgetBase {
       <div class="widget-header">
         <div class="widget-title-area">
           <span class="widget-icon">${this.icon}</span>
-          <span class="widget-title" contenteditable="false" title="더블 클릭하여 제목 수정">${this.title}</span>
         </div>
         <div class="widget-actions">
           <button class="widget-btn btn-color" title="테마 색상 변경" aria-label="색상 테마">
@@ -117,26 +116,28 @@ class WidgetBase {
       this.startDrag(e);
     });
 
-    // 제목 더블클릭 수정
-    titleEl.addEventListener('dblclick', () => {
-      titleEl.contentEditable = 'true';
-      titleEl.focus();
-      document.execCommand('selectAll', false, null);
-    });
+    // 제목 더블클릭 수정 (제목 요소가 존재할 경우)
+    if (titleEl) {
+      titleEl.addEventListener('dblclick', () => {
+        titleEl.contentEditable = 'true';
+        titleEl.focus();
+        document.execCommand('selectAll', false, null);
+      });
 
-    titleEl.addEventListener('blur', () => {
-      titleEl.contentEditable = 'false';
-      this.title = titleEl.textContent.trim() || '위젯';
-      titleEl.textContent = this.title;
-      this.board.saveState();
-    });
+      titleEl.addEventListener('blur', () => {
+        titleEl.contentEditable = 'false';
+        this.title = titleEl.textContent.trim() || '위젯';
+        titleEl.textContent = this.title;
+        this.board.saveState();
+      });
 
-    titleEl.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        titleEl.blur();
-      }
-    });
+      titleEl.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          titleEl.blur();
+        }
+      });
+    }
 
     // 접기 토글
     btnFold.addEventListener('click', (e) => {
