@@ -1,0 +1,916 @@
+/* ========================================================
+   Desktop Memo Board - Animal Crossing Cottagecore Theme
+   Inspired by Sherwood Island UI / Natural Cozy Dashboard
+======================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Pretendard:wght@300;400;500;600;700&family=Gaegu:wght@400;700&display=swap');
+
+:root {
+  --font-main: 'Nunito', 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-hand: 'Gaegu', cursive, sans-serif;
+
+  /* 코티지코어 / 동물의 숲 시그니처 컬러 팔레트 */
+  --bg-primary: #eae6dd;
+  --bg-canvas: #f4f1ea;
+  --bg-sidebar: #2c4436; /* 딥 포레스트 그린 */
+  --bg-sidebar-dark: #203529;
+
+  --card-bg: #fdfcf9;
+  --card-bg-subtle: #f7f4ec;
+  --card-border: #e6dfd1;
+  --card-shadow: 0 8px 24px rgba(78, 68, 52, 0.08), 0 2px 6px rgba(78, 68, 52, 0.04);
+  --card-radius: 22px;
+
+  --text-main: #4a3b32;       /* 따뜻한 에스프레소 브라운 */
+  --text-muted: #7c6f62;      /* 부드러운 토프 브라운 */
+  --text-dim: #a69989;        /* 라이트 샌드 브라운 */
+  --text-inverse: #fdfcf9;
+
+  --leaf-green: #588157;      /* 동숲 시그니처 세이지 그린 */
+  --leaf-green-light: #799a77;
+  --leaf-green-bg: #e9f0e8;
+  
+  --wood-brown: #8d6b4f;      /* 나무 팻말 브라운 */
+  --wood-brown-dark: #6e5038;
+  --wood-brown-light: #c4a482;
+
+  --accent-gold: #e09f3e;      /* 따뜻한 골드 머스타드 */
+  --accent-peach: #f28482;     /* 복숭아 핑크 */
+  --accent-sky: #84a59d;       /* 파스텔 스카이 */
+  --accent-butter: #f6bd60;    /* 버터 옐로우 */
+
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+  --radius-full: 9999px;
+
+  --topbar-height: 52px;
+  --dock-height: 84px;
+}
+
+/* ========================================================
+   기본 리셋 및 타이포그래피
+======================================================== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+}
+
+[draggable="true"], .dock-item {
+  -webkit-user-drag: element !important;
+  user-select: none;
+}
+
+input, textarea, [contenteditable="true"] {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  cursor: text !important;
+  pointer-events: auto !important;
+  font-family: inherit;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: var(--font-main);
+  color: var(--text-main);
+  background-color: var(--bg-primary);
+  font-size: 14px;
+}
+
+/* 앱 전체 컨테이너 */
+#app-root {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  background-color: var(--bg-canvas);
+  border-radius: 16px;
+  border: 2px solid #dfd8cb;
+  box-shadow: 0 12px 40px rgba(44, 68, 54, 0.15);
+}
+
+/* ========================================================
+   상단 컨트롤 바 (Sherwood Island Forest Header)
+======================================================== */
+#window-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--topbar-height);
+  padding: 0 20px;
+  background: #ffffff;
+  border-bottom: 2px solid #ede8de;
+  z-index: 1000;
+  -webkit-app-region: drag;
+  box-shadow: 0 2px 10px rgba(78, 68, 52, 0.04);
+}
+
+.topbar-left, .topbar-right, .topbar-center {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  -webkit-app-region: no-drag;
+}
+
+/* 동물의 숲 나무 팻말 로고 */
+.app-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.wood-sign-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #8d6b4f, #6e5038);
+  color: #fff9f0;
+  padding: 5px 14px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: -0.2px;
+  box-shadow: 0 3px 8px rgba(110, 80, 56, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  border: 1.5px solid #5a402c;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.wood-sign-badge .leaf-icon {
+  font-size: 15px;
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,0.2));
+}
+
+.welcome-greeting {
+  display: flex;
+  flex-direction: column;
+}
+
+.welcome-title {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.welcome-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* 상단 우측 날짜/시간/날씨 위젯 */
+.topbar-island-status {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--card-bg-subtle);
+  border: 1px solid var(--card-border);
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.status-item .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--leaf-green);
+}
+
+/* 윈도우 조작 버튼 */
+.topbar-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #f7f4ed;
+  border: 1px solid #e2dbcd;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.topbar-btn:hover {
+  background: #ede8dc;
+  color: var(--text-main);
+  transform: translateY(-1px);
+}
+
+.topbar-btn.active {
+  background: var(--leaf-green);
+  color: #fff;
+  border-color: var(--leaf-green);
+}
+
+.topbar-btn.btn-win-close:hover {
+  background: #f28482;
+  color: #fff;
+  border-color: #f28482;
+}
+
+/* ========================================================
+   보드 캔버스 영역 (내추럴 린넨 & 패브릭 패턴)
+======================================================== */
+#board-canvas {
+  flex: 1;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: var(--bg-canvas);
+  background-image: 
+    radial-gradient(#dfd7c8 1.5px, transparent 1.5px),
+    radial-gradient(#dfd7c8 1.5px, var(--bg-canvas) 1.5px);
+  background-size: 32px 32px;
+  background-position: 0 0, 16px 16px;
+  transition: background 0.3s ease;
+}
+
+#board-canvas.drag-target-hover {
+  outline: 3px dashed var(--leaf-green);
+  outline-offset: -8px;
+  background-color: #eef3ec;
+}
+
+/* ========================================================
+   위젯 공통 카드 스타일 (Animal Crossing Style Card)
+======================================================== */
+.widget-card {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  background: var(--card-bg);
+  border: 2px solid var(--card-border);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+  overflow: visible;
+  transition: box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.15s ease;
+}
+
+.widget-card:hover {
+  box-shadow: 0 12px 32px rgba(78, 68, 52, 0.12), 0 3px 8px rgba(78, 68, 52, 0.06);
+  border-color: #d8cebc;
+}
+
+.widget-card.is-dragging {
+  opacity: 0.94;
+  box-shadow: 0 20px 48px rgba(78, 68, 52, 0.22);
+  transform: scale(1.02);
+  cursor: grabbing !important;
+  transition: none !important;
+}
+
+.widget-card.is-pinned {
+  border-color: var(--wood-brown-light);
+}
+
+.widget-card.is-folded .widget-body,
+.widget-card.is-folded .resize-handles {
+  display: none !important;
+}
+
+.widget-card.is-closing {
+  transform: scale(0.92);
+  opacity: 0;
+  transition: all 0.18s ease-in;
+}
+
+/* 위젯 테마별 파스텔 코티지코어 색상 */
+.widget-card.theme-default {
+  background: #fdfcf9;
+  border-color: #e5dfd2;
+}
+
+.widget-card.theme-yellow {
+  background: #fffdf2;
+  border-color: #fae29f;
+}
+.widget-card.theme-yellow .widget-header {
+  border-bottom-color: #fae29f;
+}
+
+.widget-card.theme-blue {
+  background: #f4f8fb;
+  border-color: #c9e0ed;
+}
+.widget-card.theme-blue .widget-header {
+  border-bottom-color: #c9e0ed;
+}
+
+.widget-card.theme-mint {
+  background: #f2f7f2;
+  border-color: #c7ded0;
+}
+.widget-card.theme-mint .widget-header {
+  border-bottom-color: #c7ded0;
+}
+
+.widget-card.theme-purple {
+  background: #fbf6fd;
+  border-color: #e8d7f2;
+}
+.widget-card.theme-purple .widget-header {
+  border-bottom-color: #e8d7f2;
+}
+
+.widget-card.theme-rose {
+  background: #fdf5f5;
+  border-color: #f7d2d2;
+}
+.widget-card.theme-rose .widget-header {
+  border-bottom-color: #f7d2d2;
+}
+
+.widget-card.theme-dark {
+  background: #2c4436;
+  border-color: #1e3327;
+  color: #f4f1ea;
+}
+.widget-card.theme-dark .widget-title,
+.widget-card.theme-dark .widget-header {
+  color: #f4f1ea;
+}
+.widget-card.theme-dark .widget-btn {
+  color: #e2dbcd;
+}
+
+/* 위젯 헤더 */
+.widget-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-bottom: 1.5px solid #f0ebe0;
+  cursor: grab;
+  border-radius: var(--card-radius) var(--card-radius) 0 0;
+}
+
+.widget-title-area {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow: hidden;
+  flex: 1;
+}
+
+/* 동물의 숲 나뭇잎 배지 아이콘 */
+.widget-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: var(--leaf-green-bg);
+  color: var(--leaf-green);
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.widget-card.theme-dark .widget-icon {
+  background: rgba(255, 255, 255, 0.15);
+  color: #a7f3d0;
+}
+
+.widget-title {
+  font-weight: 800;
+  font-size: 13.5px;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  outline: none;
+  padding: 2px 6px;
+  border-radius: 6px;
+  letter-spacing: -0.2px;
+}
+
+.widget-title[contenteditable="true"] {
+  background: #ede7da;
+  cursor: text;
+}
+
+.widget-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 8px;
+  flex-shrink: 0;
+}
+
+.widget-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: none;
+  background: #f4f0e6;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.widget-btn:hover {
+  background: #e6dfd1;
+  color: var(--text-main);
+  transform: scale(1.1);
+}
+
+.widget-btn.btn-close:hover {
+  background: #f28482;
+  color: #fff;
+}
+
+.widget-btn.btn-pin.active {
+  background: var(--leaf-green);
+  color: #fff;
+}
+
+/* 위젯 컬러 팔레트 */
+.widget-color-palette {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #f5f0e6;
+  border-bottom: 1px solid #e8e0d0;
+  animation: fadeIn 0.15s ease;
+}
+
+.palette-chip {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  transition: transform 0.15s ease;
+}
+
+.palette-chip:hover {
+  transform: scale(1.3);
+}
+
+.palette-chip.color-default { background: #fdfcf9; }
+.palette-chip.color-yellow  { background: #fae29f; }
+.palette-chip.color-blue    { background: #c9e0ed; }
+.palette-chip.color-mint    { background: #c7ded0; }
+.palette-chip.color-purple  { background: #e8d7f2; }
+.palette-chip.color-rose    { background: #f7d2d2; }
+.palette-chip.color-dark    { background: #2c4436; }
+
+/* 위젯 본문 */
+.widget-body {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  border-radius: 0 0 var(--card-radius) var(--card-radius);
+}
+
+/* 8방향 리사이즈 핸들러 */
+.resize-handles {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+}
+
+.resize-handle {
+  position: absolute;
+  pointer-events: auto;
+  z-index: 100;
+}
+
+.rh-e { top: 10px; bottom: 10px; right: -5px; width: 10px; cursor: e-resize; }
+.rh-w { top: 10px; bottom: 10px; left: -5px; width: 10px; cursor: w-resize; }
+.rh-s { left: 10px; right: 10px; bottom: -5px; height: 10px; cursor: s-resize; }
+.rh-n { left: 10px; right: 10px; top: -5px; height: 10px; cursor: n-resize; }
+
+.rh-se { right: -5px; bottom: -5px; width: 16px; height: 16px; cursor: se-resize; }
+.rh-sw { left: -5px; bottom: -5px; width: 16px; height: 16px; cursor: sw-resize; }
+.rh-ne { right: -5px; top: -5px; width: 16px; height: 16px; cursor: ne-resize; }
+.rh-nw { left: -5px; top: -5px; width: 16px; height: 16px; cursor: nw-resize; }
+
+.widget-card:hover .rh-se::after {
+  content: '';
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  width: 7px;
+  height: 7px;
+  border-right: 2.5px solid #a69989;
+  border-bottom: 2.5px solid #a69989;
+  border-radius: 1px;
+  pointer-events: none;
+}
+
+/* ========================================================
+   하단 인터랙티브 독 (Animal Crossing Style Leaf Dock)
+======================================================== */
+#dock-launcher {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  z-index: 999;
+}
+
+.dock-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 18px 12px 18px;
+  background: #2c4436; /* 핀터레스트 좌측 사이드바와 같은 딥 포레스트 그린 */
+  border: 3px solid #3d5a49;
+  border-radius: 32px;
+  box-shadow: 0 16px 36px rgba(44, 68, 54, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  pointer-events: auto;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dock-handle {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding-bottom: 6px;
+  cursor: default;
+}
+
+.dock-pill {
+  width: 36px;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.dock-items {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.dock-item, .dock-action-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 18px;
+  background: #ffffff;
+  border: 2px solid #e8e2d5;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  cursor: grab;
+  transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, background 0.2s ease;
+  color: var(--text-main);
+}
+
+.dock-item:hover, .dock-action-btn:hover {
+  background: #fdfbf7;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+.dock-item:active {
+  cursor: grabbing;
+}
+
+.dock-item.is-dragging-source {
+  opacity: 0.4;
+  transform: scale(0.9);
+}
+
+.dock-item-icon {
+  font-size: 26px;
+  line-height: 1;
+}
+
+.dock-divider {
+  width: 2px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 0 4px;
+  border-radius: 1px;
+}
+
+.dock-action-btn {
+  cursor: pointer;
+  background: #3e5e4c;
+  border-color: #557c66;
+  color: #fff9f0;
+}
+.dock-action-btn:hover {
+  background: var(--leaf-green);
+  color: #ffffff;
+}
+
+/* 독 툴팁 */
+.dock-item-tooltip {
+  position: absolute;
+  top: -36px;
+  background: #203529;
+  border: 1px solid #3d5a49;
+  color: #fff9f0;
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-size: 11.5px;
+  font-weight: 700;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: all 0.15s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.dock-item:hover .dock-item-tooltip,
+.dock-action-btn:hover .dock-item-tooltip {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 독 드래그 고스트 프리뷰 */
+.widget-ghost-preview {
+  position: fixed;
+  width: 260px;
+  height: 200px;
+  background: rgba(253, 252, 249, 0.92);
+  border: 3px dashed var(--leaf-green);
+  border-radius: var(--card-radius);
+  box-shadow: 0 20px 48px rgba(44, 68, 54, 0.28);
+  pointer-events: none;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transform: translate(-50%, -50%);
+  color: var(--text-main);
+  font-weight: 800;
+  font-size: 14px;
+  backdrop-filter: blur(4px);
+}
+
+.ghost-icon {
+  font-size: 40px;
+}
+
+.ghost-title {
+  background: var(--leaf-green);
+  color: #fff;
+  padding: 5px 14px;
+  border-radius: 14px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+/* ========================================================
+   설정 모달 창
+======================================================== */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(44, 68, 54, 0.45);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-dialog {
+  width: 440px;
+  max-width: 90vw;
+  background: #fdfcf9;
+  border: 2px solid #e0d8c8;
+  border-radius: var(--card-radius);
+  box-shadow: 0 24px 60px rgba(44, 68, 54, 0.25);
+  overflow: hidden;
+  animation: modalPop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 2px solid #ede7da;
+  background: #f7f4ec;
+}
+
+.modal-title {
+  font-weight: 800;
+  font-size: 16px;
+  color: var(--text-main);
+}
+
+.modal-close-btn {
+  background: #ede6d6;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-close-btn:hover {
+  background: #f28482;
+  color: #fff;
+}
+
+.modal-body {
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.setting-label-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.setting-title {
+  font-weight: 700;
+  font-size: 13.5px;
+  color: var(--text-main);
+}
+
+.setting-desc {
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+.setting-select {
+  background: #f7f4ec;
+  border: 1.5px solid #dfd7c8;
+  color: var(--text-main);
+  padding: 6px 12px;
+  border-radius: 12px;
+  outline: none;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* 스위치 토글 UI */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 26px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #dfd7c8;
+  transition: .3s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 26px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .3s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 50%;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+input:checked + .slider {
+  background-color: var(--leaf-green);
+}
+
+input:checked + .slider:before {
+  transform: translateX(22px);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.btn-secondary, .btn-danger {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 14px;
+  border: 1.5px solid #dfd7c8;
+  background: #f7f4ec;
+  color: var(--text-main);
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-secondary:hover {
+  background: #ede6d6;
+  border-color: #d1c7b4;
+}
+
+.btn-danger {
+  background: #fdf0f0;
+  border-color: #f7d2d2;
+  color: #c94a4a;
+}
+
+.btn-danger:hover {
+  background: #f28482;
+  color: #fff;
+  border-color: #f28482;
+}
+
+/* 토스트 알림 */
+.toast-notification {
+  position: fixed;
+  bottom: 110px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: #2c4436;
+  border: 2px solid #3d5a49;
+  color: #fff9f0;
+  padding: 9px 22px;
+  border-radius: 24px;
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: 0 12px 28px rgba(44, 68, 54, 0.3);
+  pointer-events: none;
+  opacity: 0;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 3000;
+}
+
+.toast-notification.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes modalPop {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>메모 아일랜드 - Cozy Desktop Memo Board</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/widgets.css">
+</head>
+<body class="theme-cottagecore">
+
+  <div id="app-root">
+    <!-- 상단 윈도우 컨트롤 바 (Sherwood Island Style) -->
+    <header id="window-topbar">
+      <div class="topbar-left">
+        <!-- 나무 팻말 배지 로고 -->
+        <div class="wood-sign-badge">
+          <span class="leaf-icon">🍃</span>
+          <span>Memo Island</span>
+        </div>
+        <div class="welcome-greeting">
+          <span class="welcome-title">어서오세요! 오늘도 즐거운 하루 🌿</span>
+          <span class="welcome-sub">하단 독에서 원하는 위젯을 끌어 보드에 배치해보세요</span>
+        </div>
+      </div>
+
+      <div class="topbar-right">
+        <!-- 동물의 숲 감성 상태 표시 배지 -->
+        <div class="topbar-island-status">
+          <div class="status-item">
+            <span class="dot"></span>
+            <span id="topbar-date">10월 17일</span>
+          </div>
+          <div class="status-item">
+            <span>☀️</span>
+            <span id="topbar-time">17:35</span>
+          </div>
+        </div>
+
+        <!-- 항상 위 토글 버튼 -->
+        <button class="topbar-btn" id="win-btn-pin-top" title="화면 항상 위에 고정">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M12 2v8l3 3v2H9v-2l3-3V2z"/>
+            <line x1="12" y1="15" x2="12" y2="22"/>
+          </svg>
+        </button>
+
+        <!-- 창 컨트롤 버튼 (Electron Frameless Window 연동) -->
+        <button class="topbar-btn btn-win-minimize" id="win-btn-minimize" title="최소화">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </button>
+        <button class="topbar-btn btn-win-maximize" id="win-btn-maximize" title="최대화">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="4" y="4" width="16" height="16" rx="3"/></svg>
+        </button>
+        <button class="topbar-btn btn-win-close" id="win-btn-close" title="닫기">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- 메인 메모보드 캔버스 -->
+    <main id="board-canvas"></main>
+
+    <!-- 하단 인터랙티브 플로팅 독 (위젯 런처) -->
+    <nav id="dock-launcher"></nav>
+
+    <!-- 환경설정 모달 -->
+    <div class="modal-overlay" id="settings-modal">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <h2 class="modal-title">🌿 아일랜드 보드 설정</h2>
+          <button class="modal-close-btn" id="btn-close-settings" title="닫기">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <div class="setting-row">
+            <div class="setting-label-group">
+              <span class="setting-title">그리드 자동 맞춤 (스냅)</span>
+              <span class="setting-desc">위젯을 옮기거나 크기 조절 시 깔끔하게 정렬</span>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="setting-snap-grid" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-label-group">
+              <span class="setting-title">효과음 재생</span>
+              <span class="setting-desc">타이머 완료 차임벨 및 상호작용 효과음</span>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="setting-sound" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="modal-actions">
+            <button class="btn-secondary" id="btn-export-data">보드 데이터 백업 (.json)</button>
+            <button class="btn-secondary" id="btn-import-data">백업 불러오기</button>
+            <input type="file" id="input-import-file" accept=".json" style="display:none;" />
+          </div>
+
+          <div class="modal-actions">
+            <button class="btn-danger" id="btn-reset-defaults">기본 위젯 배치로 초기화</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 스크립트 모듈 로드 -->
+  <script src="js/sound.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/widgets/widget-base.js"></script>
+  <script src="js/widgets/todo-widget.js"></script>
+  <script src="js/widgets/calendar-widget.js"></script>
+  <script src="js/widgets/timer-widget.js"></script>
+  <script src="js/widgets/photo-widget.js"></script>
+  <script src="js/widgets/note-widget.js"></script>
+  <script src="js/widgets/clock-widget.js"></script>
+  <script src="js/board.js"></script>
+  <script src="js/dock.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,1075 @@
+/* ========================================================
+   Desktop Memo Board - Animal Crossing Widgets Stylesheet
+   Refined to match the Cozy Natural Cottagecore Aesthetic
+======================================================== */
+
+/* --------------------------------------------------------
+   1. Todo List Widget (Uppgifter / Tasks)
+-------------------------------------------------------- */
+.todo-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 14px 16px;
+  gap: 12px;
+}
+
+.todo-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: #f7f4ec;
+  padding: 10px 14px;
+  border-radius: 16px;
+  border: 1px solid #e8e2d4;
+}
+
+.todo-stats-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--text-muted);
+}
+
+.todo-percent {
+  color: var(--leaf-green);
+  font-weight: 900;
+}
+
+.todo-progress-bar {
+  width: 100%;
+  height: 8px;
+  background: #e5ded0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.todo-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #799a77, #588157);
+  border-radius: 4px;
+  transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.todo-input-bar {
+  display: flex;
+  gap: 8px;
+}
+
+.todo-input {
+  flex: 1;
+  background: #f7f4ec;
+  border: 1.5px solid #e2dad0;
+  color: var(--text-main);
+  padding: 8px 14px;
+  border-radius: 14px;
+  font-size: 13px;
+  font-weight: 600;
+  outline: none;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.todo-input:focus {
+  border-color: var(--leaf-green);
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(88, 129, 87, 0.15);
+}
+
+.todo-add-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: var(--leaf-green);
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(88, 129, 87, 0.3);
+  transition: all 0.15s ease;
+}
+
+.todo-add-btn:hover {
+  background: var(--leaf-green-light);
+  transform: translateY(-1px);
+}
+
+.todo-filters {
+  display: flex;
+  gap: 6px;
+  background: #f4efe5;
+  padding: 3px;
+  border-radius: 14px;
+}
+
+.todo-filter-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 5px 8px;
+  border-radius: 11px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.todo-filter-btn:hover {
+  color: var(--text-main);
+}
+
+.todo-filter-btn.active {
+  background: #ffffff;
+  color: var(--text-main);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.todo-list {
+  flex: 1;
+  list-style: none;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-right: 4px;
+}
+
+.todo-list::-webkit-scrollbar {
+  width: 5px;
+}
+.todo-list::-webkit-scrollbar-thumb {
+  background: #d4ccbd;
+  border-radius: 3px;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: #fcfbf8;
+  border: 1.5px solid #eae4d8;
+  border-radius: 14px;
+  transition: all 0.15s ease;
+}
+
+.todo-item:hover {
+  background: #ffffff;
+  border-color: #dcd4c6;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.04);
+}
+
+.todo-checkbox-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.todo-checkbox {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.todo-checkmark {
+  width: 18px;
+  height: 18px;
+  border-radius: 6px;
+  border: 2px solid #b8ab9a;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.todo-checkbox:checked ~ .todo-checkmark {
+  background: var(--leaf-green);
+  border-color: var(--leaf-green);
+}
+
+.todo-checkbox:checked ~ .todo-checkmark::after {
+  content: '✓';
+  color: #fff;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.todo-text {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-main);
+  word-break: break-all;
+  line-height: 1.4;
+  outline: none;
+  border-radius: 4px;
+  padding: 1px 4px;
+}
+
+.todo-item.is-done .todo-text {
+  text-decoration: line-through;
+  color: var(--text-dim);
+}
+
+.todo-delete-btn {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  opacity: 0;
+  transition: all 0.15s ease;
+}
+
+.todo-item:hover .todo-delete-btn {
+  opacity: 1;
+}
+
+.todo-delete-btn:hover {
+  color: #e63946;
+  background: #fdf0f0;
+}
+
+.todo-empty {
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 12.5px;
+  font-weight: 700;
+  margin-top: 36px;
+}
+
+/* --------------------------------------------------------
+   2. Calendar Widget (Responsive Full-Month & Popups)
+-------------------------------------------------------- */
+.calendar-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 10px 14px;
+  gap: 8px;
+  box-sizing: border-box;
+  overflow: hidden;
+  position: relative;
+}
+
+.calendar-header-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2px 0;
+  flex-shrink: 0;
+}
+
+.cal-month-title {
+  font-weight: 900;
+  font-size: 14.5px;
+  color: var(--text-main);
+  letter-spacing: -0.2px;
+}
+
+.cal-nav-buttons {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.cal-btn-prev, .cal-btn-next, .cal-btn-today {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f0e6;
+  border: 1px solid #ded6c8;
+  color: var(--text-muted);
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 4px 8px;
+  font-size: 11.5px;
+  font-weight: 800;
+  transition: all 0.15s ease;
+}
+
+.cal-btn-prev:hover, .cal-btn-next:hover, .cal-btn-today:hover {
+  background: #eae3d4;
+  color: var(--text-main);
+}
+
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  text-align: center;
+  font-size: 11.5px;
+  font-weight: 800;
+  color: var(--text-dim);
+  padding: 3px 0 5px;
+  border-bottom: 1.5px solid #eee8dc;
+  flex-shrink: 0;
+}
+
+.calendar-weekdays .sun { color: #e76f51; }
+.calendar-weekdays .sat { color: #457b9d; }
+
+/* 날짜 그리드: 가로/세로 크기 변경 시에도 언제나 해당 월의 모든 주차가 100% 균등하게 들어맞음 */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.calendar-day {
+  display: flex;
+  flex-direction: column;
+  background: #faf8f3;
+  border: 1px solid #eee5d5;
+  border-radius: 8px;
+  padding: 3px 4px;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+  position: relative;
+}
+
+.calendar-day.current-month:hover {
+  background: #f2ecd9;
+  border-color: #dcd0bc;
+}
+
+.calendar-day.other-month {
+  opacity: 0.32;
+  background: #fbf9f5;
+  cursor: default;
+}
+
+.calendar-day.is-today {
+  border: 1.5px solid var(--leaf-green);
+  background: #f2f7f1;
+}
+
+.calendar-day.is-selected {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: -1px;
+}
+
+.day-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  line-height: 1;
+  margin-bottom: 2px;
+  flex-shrink: 0;
+}
+
+.day-num {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--text-main);
+  padding: 1px 2px;
+}
+
+.calendar-day:nth-child(7n+1) .day-num {
+  color: #e76f51; /* 일요일 */
+}
+
+.calendar-day:nth-child(7n) .day-num {
+  color: #457b9d; /* 토요일 */
+}
+
+.calendar-day.is-today .day-num {
+  background: var(--leaf-green);
+  color: #ffffff !important;
+  border-radius: 5px;
+  padding: 1px 5px;
+}
+
+.day-event-count {
+  font-size: 9px;
+  font-weight: 800;
+  color: var(--wood-brown);
+  background: rgba(141, 107, 79, 0.12);
+  border-radius: 4px;
+  padding: 1px 3px;
+  line-height: 1;
+}
+
+/* 날짜 바로 아래 일정 리스트 */
+.day-events-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex: 1;
+  min-height: 0;
+}
+
+.day-events-list::-webkit-scrollbar {
+  width: 3px;
+}
+.day-events-list::-webkit-scrollbar-thumb {
+  background: rgba(141, 107, 79, 0.25);
+  border-radius: 3px;
+}
+
+.cal-event-chip {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  background: #eaf1e7;
+  color: #2c4436;
+  border: 1px solid #d4e2d0;
+  border-radius: 4px;
+  padding: 1.5px 3.5px;
+  font-size: 9.5px;
+  font-weight: 700;
+  line-height: 1.25;
+  cursor: pointer;
+  transition: all 0.12s ease;
+  min-width: 0;
+  flex-shrink: 0;
+}
+
+.cal-event-chip:hover {
+  background: #d8ebd4;
+  border-color: #84a59d;
+  color: #1e3a34;
+  transform: translateY(-1px);
+}
+
+.chip-bullet {
+  width: 3.5px;
+  height: 3.5px;
+  border-radius: 50%;
+  background: #588157;
+  flex-shrink: 0;
+}
+
+.chip-text {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 캘린더 일정 추가 / 수정 모달 팝업 */
+.cal-modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(44, 68, 54, 0.45);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 150;
+  border-radius: var(--card-radius);
+  padding: 16px;
+  animation: calModalFadeIn 0.18s ease;
+}
+
+@keyframes calModalFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.cal-modal-box {
+  background: #fdfcf9;
+  border: 2px solid #e0d8ca;
+  border-radius: 18px;
+  box-shadow: 0 16px 36px rgba(44, 68, 54, 0.25);
+  width: 100%;
+  max-width: 310px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: calModalScaleIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+}
+
+@keyframes calModalScaleIn {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.cal-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cal-modal-title {
+  font-weight: 800;
+  font-size: 14px;
+  color: var(--text-main);
+  letter-spacing: -0.2px;
+}
+
+.cal-modal-close {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 6px;
+  padding: 2px 6px;
+  transition: all 0.15s;
+}
+
+.cal-modal-close:hover {
+  background: #eee8dc;
+  color: var(--text-main);
+}
+
+.cal-modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cal-modal-input {
+  width: 100%;
+  background: #ffffff;
+  border: 1.5px solid #ded6c8;
+  color: var(--text-main);
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  outline: none;
+  box-sizing: border-box;
+  user-select: text !important;
+  pointer-events: auto !important;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.cal-modal-input:focus {
+  border-color: var(--leaf-green);
+  box-shadow: 0 0 0 3px rgba(88, 129, 87, 0.18);
+}
+
+.cal-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 6px;
+  padding-top: 4px;
+}
+
+.cal-modal-footer-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.cal-btn-cancel {
+  background: #f5f0e6;
+  border: 1px solid #ded6c8;
+  color: var(--text-muted);
+  border-radius: 9px;
+  padding: 7px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.cal-btn-cancel:hover {
+  background: #eae3d4;
+  color: var(--text-main);
+}
+
+.cal-btn-submit {
+  background: var(--leaf-green);
+  border: none;
+  color: #ffffff;
+  border-radius: 9px;
+  padding: 7px 16px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.cal-btn-submit:hover {
+  background: var(--leaf-green-light);
+}
+
+.cal-btn-delete {
+  background: #fdf2ee;
+  border: 1.2px solid #f6cfc7;
+  color: #d64545;
+  border-radius: 9px;
+  padding: 7px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.cal-btn-delete:hover {
+  background: #d64545;
+  color: #ffffff;
+  border-color: #d64545;
+}
+
+/* --------------------------------------------------------
+   3. Focus Timer Widget
+-------------------------------------------------------- */
+.timer-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  padding: 14px 16px;
+  gap: 12px;
+}
+
+.timer-modes {
+  display: flex;
+  background: #f4efe5;
+  padding: 3px;
+  border-radius: 20px;
+  width: 100%;
+}
+
+.timer-mode-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 6px 3px;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.timer-mode-btn.active {
+  background: #ffffff;
+  color: var(--text-main);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.timer-dial-area {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 6px 0;
+}
+
+.timer-svg {
+  transform: rotate(-90deg);
+}
+
+.timer-circle-bg {
+  fill: none;
+  stroke: #ece5d8;
+}
+
+.timer-circle-progress {
+  fill: none;
+  stroke: var(--leaf-green);
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.8s linear, stroke 0.3s ease;
+}
+
+.stopwatch-pulse {
+  animation: pulseStroke 2s infinite ease-in-out;
+}
+
+@keyframes pulseStroke {
+  0%, 100% { stroke: #588157; }
+  50% { stroke: #e09f3e; }
+}
+
+.timer-display {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.timer-time {
+  font-size: 36px;
+  font-weight: 900;
+  color: var(--text-main);
+  letter-spacing: -1px;
+}
+
+.timer-mode-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.timer-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  justify-content: center;
+}
+
+.timer-btn {
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 800;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+}
+
+.timer-btn-toggle {
+  background: var(--leaf-green);
+  color: #fff;
+  padding: 8px 26px;
+  box-shadow: 0 4px 12px rgba(88, 129, 87, 0.3);
+}
+
+.timer-btn-toggle:hover {
+  background: var(--leaf-green-light);
+  transform: translateY(-1px);
+}
+
+.timer-btn-toggle.is-running {
+  background: var(--accent-gold);
+  box-shadow: 0 4px 12px rgba(224, 159, 62, 0.35);
+}
+
+.timer-btn-reset {
+  background: #f5f0e6;
+  border: 1.5px solid #ded6c8;
+  color: var(--text-muted);
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  justify-content: center;
+}
+
+.timer-btn-reset:hover {
+  background: #eae3d4;
+  color: var(--text-main);
+}
+
+.timer-footer-info {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+/* --------------------------------------------------------
+   4. Photo Widget (Senaste bilden / Latest Photo)
+-------------------------------------------------------- */
+.photo-dropzone {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed #dcd4c6;
+  border-radius: 18px;
+  margin: 12px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #f7f4ec;
+  text-align: center;
+}
+
+.photo-dropzone:hover, .photo-dropzone.is-dragover {
+  border-color: var(--leaf-green);
+  background: #edf4ec;
+}
+
+.dropzone-icon {
+  color: var(--text-dim);
+  margin-bottom: 10px;
+}
+
+.dropzone-text {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+
+.dropzone-hint {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.photo-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+  padding: 8px;
+}
+
+.photo-image-wrapper {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ede6d8;
+  border-radius: 16px;
+  border: 2px solid #e4ddd0;
+}
+
+.photo-img {
+  width: 100%;
+  height: 100%;
+  object-position: center;
+  border-radius: 14px;
+}
+
+.photo-container.fit-cover .photo-img { object-fit: cover; }
+.photo-container.fit-contain .photo-img { object-fit: contain; }
+
+.photo-overlay-tools {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  gap: 6px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  background: rgba(44, 68, 54, 0.75);
+  backdrop-filter: blur(4px);
+  padding: 4px 8px;
+  border-radius: 10px;
+}
+
+.photo-image-wrapper:hover .photo-overlay-tools {
+  opacity: 1;
+}
+
+.photo-tool-btn {
+  background: transparent;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  padding: 3px;
+  border-radius: 4px;
+}
+
+.photo-tool-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.photo-caption-bar {
+  padding: 8px 6px 4px 6px;
+}
+
+.photo-caption-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: var(--text-main);
+  font-size: 12.5px;
+  font-weight: 700;
+  outline: none;
+  text-align: center;
+}
+
+/* --------------------------------------------------------
+   5. Sticky Note Widget (Anteckningar / Notes)
+-------------------------------------------------------- */
+.note-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 12px 14px;
+  gap: 10px;
+}
+
+.note-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1.5px dashed #dfd8cb;
+  padding-bottom: 8px;
+}
+
+.note-font-selector {
+  display: flex;
+  gap: 4px;
+}
+
+.note-font-btn {
+  background: #ede6d8;
+  border: none;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 8px;
+  cursor: pointer;
+  color: var(--text-muted);
+}
+
+.note-font-btn.active {
+  background: var(--wood-brown);
+  color: #fff;
+}
+
+.note-char-count {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--text-dim);
+}
+
+.note-textarea {
+  flex: 1;
+  width: 100%;
+  border: none;
+  background: transparent;
+  color: var(--text-main);
+  font-family: inherit;
+  resize: none;
+  outline: none;
+  line-height: 1.7;
+  font-weight: 600;
+}
+
+.note-container.font-small .note-textarea { font-size: 12px; }
+.note-container.font-medium .note-textarea { font-size: 13.5px; }
+.note-container.font-large .note-textarea { font-size: 15.5px; }
+
+/* --------------------------------------------------------
+   6. Clock Widget
+-------------------------------------------------------- */
+.clock-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 14px;
+}
+
+.clock-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.clock-mode-toggle, .clock-format-toggle {
+  background: #f4efe5;
+  border: 1px solid #ded6c8;
+  color: var(--text-muted);
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 8px;
+  cursor: pointer;
+}
+
+.clock-mode-toggle:hover, .clock-format-toggle:hover {
+  background: #eae3d4;
+  color: var(--text-main);
+}
+
+.clock-digital-box {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.clock-time-display {
+  font-size: 40px;
+  font-weight: 900;
+  color: var(--text-main);
+  letter-spacing: -1px;
+}
+
+.clock-date-display {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--wood-brown);
+}
+
+.clock-analog-box {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.analog-svg {
+  overflow: visible;
+}
+
+.analog-dial-bg {
+  fill: #fcfbf8;
+  stroke: #ded6c8;
+  stroke-width: 3;
+}
+
+.analog-tick {
+  stroke: #c8beaf;
+  stroke-width: 2;
+}
+
+.analog-tick.tick-major {
+  stroke: var(--text-main);
+  stroke-width: 3;
+}
+
+.analog-hand {
+  transform-origin: 100px 100px;
+  stroke-linecap: round;
+  transition: transform 0.05s cubic-bezier(0.4, 2.08, 0.55, 0.44);
+}
+
+.hand-hour {
+  stroke: var(--text-main);
+  stroke-width: 4.5;
+}
+
+.hand-minute {
+  stroke: var(--wood-brown);
+  stroke-width: 3;
+}
+
+.hand-second {
+  stroke: #e76f51;
+  stroke-width: 1.8;
+}
+
+.analog-center-pin {
+  fill: #e76f51;
+}

@@ -1,0 +1,49 @@
+{
+  "name": "desktop-memo-board",
+  "version": "1.0.0",
+  "description": "Customizable Desktop Memo Board with Drag & Drop Widgets",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron .",
+    "build": "electron-builder --win",
+    "build:portable": "electron-builder --win portable",
+    "build:dir": "electron-builder --win dir",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "build": {
+    "appId": "com.antigravity.memoboard",
+    "productName": "MemoBoard",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": [
+        "portable",
+        "dir"
+      ]
+    },
+    "portable": {
+      "artifactName": "MemoBoard-Portable.exe"
+    },
+    "files": [
+      "**/*",
+      "!dist/*",
+      "!server.js"
+    ]
+  },
+  "keywords": [
+    "memoboard",
+    "desktop-widgets",
+    "electron",
+    "todo",
+    "calendar",
+    "timer"
+  ],
+  "author": "Antigravity",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^40.8.0",
+    "electron-builder": "^26.15.3"
+  }
+}
