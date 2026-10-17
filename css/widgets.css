@@ -908,15 +908,14 @@
 }
 
 /* --------------------------------------------------------
-   5. Sticky Note Widget (Pinterest Washi Tape Memo Paper)
+   5. Sticky Note Widget (Pinterest 6 Authentic Reference Designs)
 -------------------------------------------------------- */
 .widget-card.widget-note {
   border-radius: 4px !important;
-  background: #d4ceb6 !important; /* 레퍼런스 1번째 줄 2번째 종이 색상 (차분하고 온화한 올리브 베이지) */
-  border: 1px solid rgba(110, 100, 80, 0.22) !important;
-  box-shadow: 0 10px 26px rgba(60, 52, 40, 0.12), 0 2px 6px rgba(60, 52, 40, 0.05) !important;
-  color: #3d372e !important;
-  padding: 0;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
   overflow: visible !important;
 }
 
@@ -930,6 +929,7 @@
   width: 100%;
   border-radius: 4px;
   overflow: visible;
+  background: transparent !important;
 }
 
 .note-paper {
@@ -939,45 +939,64 @@
   width: 100%;
   height: 100%;
   box-sizing: border-box;
+  overflow: visible;
+  transition: transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.18s ease, filter 0.18s ease;
 }
 
-/* 상단 마스킹 테이프 (종이 질감 Washi Tape & 손으로 찢은 톱니형 끝단 컷) */
+/* ========================================================
+   마스킹 테이프 공통 (Washi Tape with fibrous texture & torn ends)
+======================================================== */
 .note-tape {
   position: absolute;
-  top: -10px;
-  left: 50%;
-  transform: translateX(-50%) rotate(-0.5deg);
-  width: 76px;
-  height: 22px;
   background-color: rgba(234, 227, 211, 0.82);
   background-image: 
-    /* 미세한 주름 및 빛 반사 효과 */
     linear-gradient(105deg, transparent 32%, rgba(255, 255, 255, 0.42) 42%, rgba(0, 0, 0, 0.03) 48%, transparent 58%),
-    /* 종이 테이프 미세 섬유질 질감 */
     repeating-linear-gradient(90deg, transparent, transparent 2.5px, rgba(255, 255, 255, 0.14) 2.5px, rgba(255, 255, 255, 0.14) 5px);
   box-shadow: 0 1.5px 4px rgba(60, 52, 40, 0.16), inset 0 0 1px 1px rgba(255, 255, 255, 0.45);
   backdrop-filter: blur(1.5px);
-  /* 손으로 찢은 듯한 자연스러운 톱니형 엣지 컷 (Torn paper edges) */
   clip-path: polygon(
     0% 4%, 2% 0%, 98% 1%, 100% 4%,
     98% 12%, 100% 22%, 98% 32%, 100% 44%, 98% 54%, 100% 64%, 98% 74%, 100% 86%, 98% 96%, 100% 100%,
     98% 99%, 2% 100%, 0% 97%,
     2% 88%, 0% 78%, 2% 68%, 0% 56%, 2% 46%, 0% 34%, 2% 24%, 0% 14%
   );
-  cursor: grab;
+  cursor: pointer;
   z-index: 20;
   pointer-events: auto;
   transition: background-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .note-tape:hover {
-  background-color: rgba(238, 232, 218, 0.94);
-  transform: translateX(-50%) rotate(0deg) scale(1.02);
+  background-color: rgba(242, 236, 224, 0.96);
+  transform: scale(1.03);
   box-shadow: 0 2.5px 6px rgba(60, 52, 40, 0.22);
 }
 
 .note-tape:active {
   cursor: grabbing;
+}
+
+/* 상단 중앙 기본 테이프 */
+.note-tape-center {
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-0.5deg);
+  width: 76px;
+  height: 22px;
+}
+.note-tape-center:hover {
+  transform: translateX(-50%) rotate(0deg) scale(1.03);
+}
+
+/* 대각선 코너 테이프 (기본 숨김) */
+.note-tape-tr,
+.note-tape-bl {
+  display: none;
+}
+
+/* 디자인 2 바인더 링 타공 구멍 리스트 (기본 숨김) */
+.note-binder-holes {
+  display: none;
 }
 
 /* 상단 드래그 가능 영역 */
@@ -987,11 +1006,11 @@
   left: 0;
   right: 28px;
   height: 26px;
-  cursor: grab;
+  cursor: pointer;
   z-index: 15;
 }
 
-/* 오른쪽 위 깔끔한 x 닫기 버튼 */
+/* 오른쪽 위 미니멀 닫기 x 버튼 */
 .note-btn-close {
   position: absolute;
   top: 6px;
@@ -1019,7 +1038,7 @@
   background: rgba(0, 0, 0, 0.06);
 }
 
-/* 메모 본문 textarea (다른 위젯과 동일한 Pretendard / Nunito 폰트 적용) */
+/* 메모 본문 textarea (모든 위젯 공통 Pretendard/Nunito 서체) */
 .note-textarea {
   flex: 1;
   width: 100%;
@@ -1041,53 +1060,254 @@
 }
 
 .note-textarea::placeholder {
-  color: rgba(74, 67, 56, 0.45);
+  color: rgba(74, 67, 56, 0.42);
   font-weight: 500;
 }
 
-/* 종이 컬러 테마 (기본은 레퍼런스 1행 2열 색상) */
-.widget-card.widget-note.theme-default {
-  background: #d4ceb6 !important;
-  color: #3d372e !important;
+/* ========================================================
+   1. [디자인 1 - 1행 1열] 거친 찢어진 양장지 (Torn Deckle Edge Paper)
+   - 크림/아이보리 종이
+   - 사면 전체가 손으로 찢어진 듯한 거친 엣지
+   - 상단 중앙 살짝 기울어진 오프화이트 주름 테이프
+======================================================== */
+.widget-card.widget-note.note-design-1 .note-paper {
+  background-color: #eee7d8;
+  background-image: 
+    radial-gradient(rgba(145, 125, 100, 0.08) 1px, transparent 0),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, transparent 60%);
+  background-size: 10px 10px, 100% 100%;
+  clip-path: polygon(
+    0% 2.2%, 3% 0.7%, 7% 1.9%, 11% 0.5%, 16% 1.7%, 21% 0.6%, 27% 2.0%, 33% 0.7%, 39% 1.8%, 45% 0.5%, 51% 2.0%, 57% 0.6%, 63% 1.9%, 69% 0.7%, 75% 1.9%, 81% 0.5%, 87% 2.0%, 93% 0.6%, 97% 1.9%, 100% 1.3%,
+    99.3% 7%, 98.3% 14%, 99.5% 21%, 98.4% 28%, 99.4% 35%, 98.3% 42%, 99.5% 49%, 98.4% 56%, 99.4% 63%, 98.3% 70%, 99.5% 77%, 98.4% 84%, 99.4% 91%, 98.2% 97%, 100% 100%,
+    97% 99.2%, 93% 98.3%, 87% 99.4%, 81% 98.3%, 75% 99.5%, 69% 98.4%, 63% 99.4%, 57% 98.3%, 51% 99.5%, 45% 98.4%, 39% 99.4%, 33% 98.3%, 27% 99.5%, 21% 98.4%, 15% 99.4%, 9% 98.3%, 4% 99.5%, 0% 98.6%,
+    1.4% 92%, 0.5% 85%, 1.6% 78%, 0.6% 71%, 1.5% 64%, 0.5% 57%, 1.6% 50%, 0.6% 43%, 1.5% 36%, 0.5% 29%, 1.6% 22%, 0.6% 15%, 1.4% 8%, 0% 2.2%
+  );
+  filter: drop-shadow(0 10px 22px rgba(60, 52, 40, 0.16)) drop-shadow(0 2px 5px rgba(60, 52, 40, 0.08));
 }
 
-.widget-card.widget-note.theme-yellow {
-  background: #fbf5dc !important;
-  color: #4a3b32 !important;
+.widget-card.widget-note.note-design-1 .note-tape-center {
+  top: -9px;
+  left: 50%;
+  transform: translateX(-50%) rotate(1.4deg);
+  width: 68px;
+  height: 21px;
+  background-color: rgba(240, 235, 222, 0.85);
+}
+.widget-card.widget-note.note-design-1 .note-tape-center:hover {
+  transform: translateX(-50%) rotate(0deg) scale(1.03);
 }
 
-.widget-card.widget-note.theme-blue {
-  background: #e1ebf0 !important;
-  color: #2d424e !important;
+.widget-card.widget-note.note-design-1 .note-textarea {
+  color: #3d352b;
+  padding: 24px 18px 14px 18px;
 }
 
-.widget-card.widget-note.theme-mint {
-  background: #d9e6de !important;
-  color: #264336 !important;
+/* ========================================================
+   2. [디자인 2 - 1행 2열] 바인더 타공 & 가로줄 노트 (Binder Ruled Note)
+   - 은은한 세이지 그레이-그린 종이
+   - 좌측 스프링 바인더 타공 구멍 & 마진 라인
+   - 섬세한 가로 노트 줄눈
+   - 상단 넓은 반투명 화이트 테이프
+======================================================== */
+.widget-card.widget-note.note-design-2 .note-paper {
+  background-color: #ccd5c4;
+  border-radius: 2px 4px 4px 2px;
+  border: 1px solid rgba(100, 115, 95, 0.22);
+  box-shadow: 0 10px 26px rgba(50, 60, 45, 0.14), 0 2px 6px rgba(50, 60, 45, 0.06);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 23px,
+    rgba(75, 95, 70, 0.15) 23px,
+    rgba(75, 95, 70, 0.15) 24px
+  );
+  background-position: 0 28px;
 }
 
-.widget-card.widget-note.theme-purple {
-  background: #ebe3f2 !important;
-  color: #42324f !important;
+.widget-card.widget-note.note-design-2 .note-binder-holes {
+  display: flex !important;
+  flex-direction: column;
+  justify-content: space-evenly;
+  position: absolute;
+  top: 24px;
+  bottom: 12px;
+  left: 7px;
+  width: 14px;
+  pointer-events: none;
+  z-index: 10;
+  border-right: 1px dashed rgba(80, 100, 75, 0.22);
+  padding-right: 4px;
 }
 
-.widget-card.widget-note.theme-rose {
-  background: #faece7 !important;
-  color: #54332e !important;
+.widget-card.widget-note.note-design-2 .note-binder-holes span {
+  display: block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #5a402d;
+  box-shadow: inset 0 1.5px 2px rgba(0, 0, 0, 0.5), 0 0.5px 0.5px rgba(255, 255, 255, 0.4);
 }
 
-.widget-card.widget-note.theme-dark {
-  background: #888d75 !important;
-  border-color: rgba(60, 65, 50, 0.4) !important;
+.widget-card.widget-note.note-design-2 .note-tape-center {
+  top: -9px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-0.6deg);
+  width: 86px;
+  height: 22px;
+  background-color: rgba(246, 245, 240, 0.82);
 }
-.widget-card.widget-note.theme-dark .note-textarea {
-  color: #fcfbf7;
+
+.widget-card.widget-note.note-design-2 .note-textarea {
+  padding-left: 34px !important;
+  line-height: 24px !important;
+  color: #2e382b;
 }
-.widget-card.widget-note.theme-dark .note-btn-close {
-  color: #fcfbf7;
+
+/* ========================================================
+   3. [디자인 3 - 2행 1열] 클래식 세이지 사각 메모 (Classic Sage Post-it)
+   - 매끄럽고 차분한 세이지 올리브 베이지
+   - 정갈한 사각 커팅
+   - 좌측으로 살짝 기운 크림 마스킹 테이프
+======================================================== */
+.widget-card.widget-note.note-design-3 .note-paper {
+  background-color: #d2d8c7;
+  border-radius: 3px;
+  border: 1px solid rgba(110, 120, 100, 0.22);
+  box-shadow: 0 10px 24px rgba(60, 68, 50, 0.12), 0 2px 6px rgba(60, 68, 50, 0.05);
 }
-.widget-card.widget-note.theme-dark .note-tape {
-  background-color: rgba(220, 215, 200, 0.78);
+
+.widget-card.widget-note.note-design-3 .note-tape-center {
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-2deg);
+  width: 74px;
+  height: 22px;
+  background-color: rgba(238, 233, 219, 0.84);
+}
+
+.widget-card.widget-note.note-design-3 .note-textarea {
+  color: #384232;
+}
+
+/* ========================================================
+   4. [디자인 4 - 2행 2열] 와이드 크림 메시지 카드 (Wide Cream Cardstock)
+   - 화사하고 따뜻한 밀크/크림 색조
+   - 크래프트 탄(Buff Kraft) 컬러 마스킹 테이프
+======================================================== */
+.widget-card.widget-note.note-design-4 .note-paper {
+  background-color: #f7f5ed;
+  border-radius: 3px;
+  border: 1px solid rgba(140, 130, 115, 0.2);
+  box-shadow: 0 10px 24px rgba(70, 60, 48, 0.11), 0 2px 6px rgba(70, 60, 48, 0.05);
+}
+
+.widget-card.widget-note.note-design-4 .note-tape-center {
+  top: -9px;
+  left: 50%;
+  transform: translateX(-50%) rotate(0.4deg);
+  width: 78px;
+  height: 22px;
+  background-color: rgba(226, 212, 187, 0.92);
+  box-shadow: 0 1.5px 4px rgba(80, 65, 45, 0.18), inset 0 0 1px 1px rgba(255, 255, 255, 0.35);
+}
+
+.widget-card.widget-note.note-design-4 .note-textarea {
+  color: #3e372e;
+}
+
+/* ========================================================
+   5. [디자인 5 - 3행 1열] 다크 올리브 크라프트 티켓 (Dark Olive Double-tape Ticket)
+   - 묵직하고 감성적인 다크 올리브 크라프트지
+   - 상단 양쪽 모서리가 45도 커팅된 빈티지 티켓 형태
+   - 우상단 & 좌하단 2개의 사선 대각선 테이프
+   - 밝은 아이보리 텍스트
+======================================================== */
+.widget-card.widget-note.note-design-5 .note-paper {
+  background-color: #656953;
+  color: #f6f4ee;
+  clip-path: polygon(
+    14px 0%,
+    calc(100% - 14px) 0%,
+    100% 14px,
+    100% 100%,
+    0% 100%,
+    0% 14px
+  );
+  filter: drop-shadow(0 10px 24px rgba(40, 45, 32, 0.24)) drop-shadow(0 2px 5px rgba(40, 45, 32, 0.12));
+}
+
+.widget-card.widget-note.note-design-5 .note-tape-center {
+  display: none !important;
+}
+
+.widget-card.widget-note.note-design-5 .note-tape-tr {
+  display: block !important;
+  top: -5px;
+  right: -9px;
+  transform: rotate(44deg);
+  width: 58px;
+  height: 20px;
+  background-color: rgba(234, 228, 214, 0.82);
+}
+.widget-card.widget-note.note-design-5 .note-tape-tr:hover {
+  transform: rotate(44deg) scale(1.05);
+}
+
+.widget-card.widget-note.note-design-5 .note-tape-bl {
+  display: block !important;
+  bottom: -5px;
+  left: -9px;
+  transform: rotate(44deg);
+  width: 58px;
+  height: 20px;
+  background-color: rgba(234, 228, 214, 0.82);
+}
+.widget-card.widget-note.note-design-5 .note-tape-bl:hover {
+  transform: rotate(44deg) scale(1.05);
+}
+
+.widget-card.widget-note.note-design-5 .note-textarea {
+  color: #f6f4ee !important;
+}
+.widget-card.widget-note.note-design-5 .note-textarea::placeholder {
+  color: rgba(246, 244, 238, 0.45) !important;
+}
+
+.widget-card.widget-note.note-design-5 .note-btn-close {
+  color: #ece8dc !important;
+  top: 9px;
+  right: 14px;
+}
+
+/* ========================================================
+   6. [디자인 6 - 3행 2열] 그리드 모눈종이 카드 (Graph Grid Paper)
+   - 은은한 웜 아이보리 카드
+   - 섬세한 18px 모눈종이 그리드 패턴
+   - 정갈한 수평 반투명 테이프
+======================================================== */
+.widget-card.widget-note.note-design-6 .note-paper {
+  background-color: #f6f5ee;
+  border-radius: 3px;
+  border: 1px solid rgba(135, 125, 110, 0.2);
+  box-shadow: 0 10px 24px rgba(65, 58, 48, 0.11), 0 2px 6px rgba(65, 58, 48, 0.05);
+  background-image: 
+    linear-gradient(rgba(125, 118, 105, 0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(125, 118, 105, 0.09) 1px, transparent 1px);
+  background-size: 18px 18px;
+  background-position: 8px 10px;
+}
+
+.widget-card.widget-note.note-design-6 .note-tape-center {
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%) rotate(0deg);
+  width: 72px;
+  height: 22px;
+  background-color: rgba(246, 245, 240, 0.85);
+}
+
+.widget-card.widget-note.note-design-6 .note-textarea {
+  color: #37332c;
 }
 
 /* --------------------------------------------------------
